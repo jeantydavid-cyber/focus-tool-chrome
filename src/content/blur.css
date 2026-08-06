@@ -1,0 +1,206 @@
+/* Blur Distractions — page-injected styles. Everything is namespaced bd-. */
+
+/* The blur itself (spec §2.1). Interaction is blocked by the per-element
+   overlay (which also hosts the peek button), not by pointer-events on the
+   element, so hover detection keeps working. */
+.bd-blurred {
+  filter: blur(var(--bd-blur-px, 12px)) grayscale(40%) !important;
+  transition: filter 200ms ease !important;
+}
+.bd-blurred.bd-peek {
+  filter: none !important;
+}
+
+/* Overlay root lives on <html> so it survives body re-renders. */
+#bd-root {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: 2147483646;
+  pointer-events: none;
+}
+
+.bd-overlay {
+  position: absolute;
+  pointer-events: auto; /* captures clicks so blurred content can't be used */
+  background: transparent;
+}
+.bd-overlay.bd-peeking {
+  pointer-events: none; /* let the user interact with revealed content */
+}
+#bd-root.bd-picking .bd-overlay {
+  pointer-events: none; /* don't swallow clicks while the picker is active */
+}
+
+/* Peek button (👁) — fades in on hover or keyboard focus. */
+.bd-peek-btn {
+  position: absolute;
+  top: min(96px, calc(50% - 22px));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(20, 20, 28, 0.88);
+  color: #fff;
+  font: 600 13px/1 system-ui, -apple-system, sans-serif;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 150ms ease;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.18);
+  pointer-events: auto;
+}
+.bd-overlay:hover .bd-peek-btn,
+.bd-peek-btn:focus-visible {
+  opacity: 1;
+}
+.bd-peek-btn:focus-visible {
+  outline: 2px solid #8b7bff;
+  outline-offset: 2px;
+}
+
+/* Hold-to-confirm progress ring (spec §3). */
+.bd-peek-ring {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+.bd-peek-ring circle {
+  fill: none;
+  stroke-width: 2.5;
+}
+.bd-peek-ring .bd-ring-track {
+  stroke: rgba(255, 255, 255, 0.25);
+}
+.bd-peek-ring .bd-ring-fill {
+  stroke: #8b7bff;
+  stroke-linecap: round;
+  stroke-dasharray: 44; /* 2πr, r=7 */
+  stroke-dashoffset: 44;
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+.bd-peek-btn.bd-holding .bd-ring-fill {
+  stroke-dashoffset: 0;
+  /* transition duration is set from JS to match peekHoldMs */
+}
+
+/* Countdown chip shown while peeking. */
+.bd-countdown {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(20, 20, 28, 0.88);
+  color: #fff;
+  font: 600 12px/1 system-ui, -apple-system, sans-serif;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+/* ---------- Picker ---------- */
+
+#bd-picker-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+}
+
+/* Dual-color outline so it reads on both dark and light sites (QA §5). */
+.bd-picker-highlight {
+  position: fixed;
+  pointer-events: none;
+  background: rgba(139, 123, 255, 0.14);
+  box-shadow:
+    0 0 0 2px #7c5cff,
+    0 0 0 4px rgba(255, 255, 255, 0.9);
+  border-radius: 3px;
+  transition: top 40ms linear, left 40ms linear, width 40ms linear, height 40ms linear;
+}
+
+.bd-picker-label {
+  position: fixed;
+  pointer-events: none;
+  padding: 4px 9px;
+  border-radius: 6px;
+  background: #17151f;
+  color: #e6e2ff;
+  font: 500 12px/1.2 ui-monospace, Menlo, monospace;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.15);
+  max-width: 60vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bd-picker-hint {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: #17151f;
+  color: #fff;
+  font: 500 13px/1 system-ui, -apple-system, sans-serif;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+.bd-picker-hint kbd {
+  font: inherit;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* ---------- Toast ---------- */
+
+.bd-toast {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(92vw, 520px);
+  padding: 11px 16px;
+  border-radius: 12px;
+  background: #17151f;
+  color: #fff;
+  font: 500 13px/1.35 system-ui, -apple-system, sans-serif;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.14);
+  pointer-events: auto;
+  animation: bd-toast-in 180ms ease;
+}
+@keyframes bd-toast-in {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+.bd-toast button {
+  border: 0;
+  border-radius: 8px;
+  padding: 6px 11px;
+  background: #7c5cff;
+  color: #fff;
+  font: 600 12px/1 system-ui, -apple-system, sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.bd-toast button.bd-secondary {
+  background: rgba(255, 255, 255, 0.14);
+}
+.bd-toast button:hover {
+  filter: brightness(1.12);
+}

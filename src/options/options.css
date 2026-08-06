@@ -1,0 +1,91 @@
+:root {
+  color-scheme: light dark;
+  --accent: #7c5cff;
+  --bg: #ffffff;
+  --fg: #1c1a26;
+  --muted: #6f6b80;
+  --line: #e7e4f2;
+  --card: #f6f5fb;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17151f;
+    --fg: #eceaf6;
+    --muted: #9a95ad;
+    --line: #2c2938;
+    --card: #201d2c;
+  }
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font: 14px/1.55 system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+main { max-width: 620px; margin: 0 auto; padding: 32px 20px 60px; }
+.hidden { display: none !important; }
+.muted { color: var(--muted); }
+
+h1 { display: flex; align-items: center; gap: 10px; font-size: 22px; margin: 0 0 4px; }
+h2 { font-size: 15px; margin: 0 0 4px; display: flex; align-items: center; gap: 8px; }
+
+section {
+  margin-top: 22px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+}
+
+.row { display: flex; align-items: center; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+.row label { min-width: 130px; font-weight: 600; }
+.row input[type="range"] { flex: 1; accent-color: var(--accent); min-width: 160px; }
+.row output { min-width: 52px; text-align: right; font-variant-numeric: tabular-nums; }
+.radios label { min-width: 0; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+.radios input { accent-color: var(--accent); }
+
+section.locked .row input { opacity: 0.5; pointer-events: none; }
+
+.pro {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn {
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 9px;
+  padding: 8px 14px;
+  font: 600 13px/1 system-ui, sans-serif;
+  cursor: pointer;
+}
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn:hover { filter: brightness(1.06); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.linkish {
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: 600 13px/1 system-ui, sans-serif;
+  cursor: pointer;
+  padding: 0;
+}
+
+kbd {
+  padding: 2px 7px;
+  border-radius: 5px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  font: 600 12px/1 ui-monospace, monospace;
+}
+
+footer { margin-top: 28px; font-size: 12.5px; }

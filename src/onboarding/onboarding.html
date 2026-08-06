@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Welcome — Blur Distractions</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --accent: #7c5cff;
+      --bg: #ffffff; --fg: #1c1a26; --muted: #6f6b80; --line: #e7e4f2; --card: #f6f5fb;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #17151f; --fg: #eceaf6; --muted: #9a95ad; --line: #2c2938; --card: #201d2c; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 16px/1.6 system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--fg); }
+    main { max-width: 640px; margin: 0 auto; padding: 48px 24px 80px; text-align: center; }
+    h1 { font-size: 30px; margin: 18px 0 8px; }
+    .tagline { color: var(--muted); font-size: 17px; margin: 0 0 34px; }
+
+    /* Looping demo: three "posts", the middle one blurs and re-blurs. */
+    .demo {
+      border: 1px solid var(--line); border-radius: 16px; background: var(--card);
+      padding: 22px; margin: 0 auto 36px; max-width: 460px;
+    }
+    .post { height: 54px; border-radius: 10px; background: var(--line); margin-bottom: 12px; position: relative; overflow: hidden; }
+    .post::before {
+      content: ""; position: absolute; inset: 10px 60% 10px 10px;
+      border-radius: 6px; background: var(--muted); opacity: .45;
+    }
+    .post:last-child { margin-bottom: 0; }
+    .post.target { animation: blurloop 5s ease-in-out infinite; }
+    .cursor {
+      position: absolute; font-size: 22px; right: 18%; top: 40%;
+      animation: cursorloop 5s ease-in-out infinite; z-index: 2;
+    }
+    @keyframes blurloop {
+      0%, 24% { filter: none; }
+      34%, 100% { filter: blur(7px) grayscale(40%); }
+    }
+    @keyframes cursorloop {
+      0% { transform: translate(30px, 26px); opacity: 0; }
+      12% { transform: translate(0, 0); opacity: 1; }
+      24% { transform: scale(1); }
+      28% { transform: scale(0.8); }
+      34% { transform: scale(1); opacity: 1; }
+      55%, 100% { opacity: 0; }
+    }
+
+    ol.steps { list-style: none; padding: 0; margin: 0 0 40px; display: grid; gap: 14px; text-align: left; }
+    ol.steps li {
+      display: flex; gap: 14px; align-items: center;
+      border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; background: var(--card);
+    }
+    .num {
+      flex: none; width: 30px; height: 30px; border-radius: 50%;
+      background: var(--accent); color: #fff; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    kbd {
+      padding: 2px 8px; border-radius: 6px; border: 1px solid var(--line);
+      background: var(--bg); font: 700 14px/1.4 ui-monospace, monospace;
+    }
+    h2 { font-size: 15px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 14px; }
+    .presets { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
+    .presets button {
+      border: 1px solid var(--line); background: var(--card); color: var(--fg);
+      border-radius: 12px; padding: 12px 20px; font: 600 15px/1 system-ui, sans-serif; cursor: pointer;
+    }
+    .presets button:hover { border-color: var(--accent); }
+    .presets button.done { border-color: var(--accent); color: var(--accent); }
+    .hint { color: var(--muted); font-size: 13.5px; }
+    footer { margin-top: 44px; color: var(--muted); font-size: 13.5px; }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="../icons/icon128.png" width="72" height="72" alt="">
+    <h1>Point. Click. Blur.</h1>
+    <p class="tagline">The content stays where it was — just out of your attention's reach.</p>
+
+    <div class="demo" aria-hidden="true">
+      <div class="post"></div>
+      <div class="post target"><span class="cursor">🎯</span></div>
+      <div class="post"></div>
+    </div>
+
+    <ol class="steps">
+      <li><span class="num">1</span><span>Press <kbd>Alt+B</kbd> on any website (or click the toolbar icon).</span></li>
+      <li><span class="num">2</span><span>Click the thing that distracts you — a feed, a sidebar, comments.</span></li>
+      <li><span class="num">3</span><span>Done. It stays blurred. Need it anyway? Hold the 👁 peek button for a moment.</span></li>
+    </ol>
+
+    <h2>Or start with one click</h2>
+    <div class="presets">
+      <button data-preset="youtube" data-host="www.youtube.com">▶ Calm YouTube</button>
+      <button data-preset="x" data-host="x.com">𝕏 Calm X / Twitter</button>
+      <button data-preset="linkedin" data-host="www.linkedin.com">in Calm LinkedIn</button>
+    </div>
+    <p class="hint">Applies our hand-tuned blur rules for that site. You can toggle each one later from the toolbar popup.</p>
+
+    <footer>
+      Runs entirely in your browser. No account, no tracking.<br>
+      We only get access to a site when <strong>you</strong> choose to blur something on it.
+    </footer>
+  </main>
+  <script src="../lib/presets.js"></script>
+  <script src="onboarding.js"></script>
+</body>
+</html>

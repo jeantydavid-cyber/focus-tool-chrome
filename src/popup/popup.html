@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Blur Distractions</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img src="../icons/icon32.png" width="20" height="20" alt="">
+      <span>Blur Distractions</span>
+    </div>
+    <button id="pauseBtn" class="chip" title="Pause blurring everywhere">⏸ Pause</button>
+  </header>
+
+  <div id="pauseBanner" class="banner hidden">
+    <span id="pauseText">Paused everywhere.</span>
+    <button id="resumeBtn" class="chip primary">Resume</button>
+  </div>
+  <div id="pauseMenu" class="menu hidden">
+    <button data-minutes="0">Pause until I resume</button>
+    <button data-minutes="30">Pause for 30 minutes</button>
+  </div>
+
+  <main>
+    <section id="unsupported" class="hidden">
+      <p class="muted">This page can't be blurred (browser or store pages are off-limits).</p>
+    </section>
+
+    <section id="siteSection" class="hidden">
+      <div class="site-row">
+        <span id="siteHost" class="host"></span>
+        <label class="switch" title="Blur on this site">
+          <input type="checkbox" id="siteToggle" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <button id="pickBtn" class="big-btn">🎯 Blur something on this page <span class="kbd">Alt+B</span></button>
+
+      <div id="permissionBanner" class="banner hidden">
+        <span>Blur is on for now — allow access so it sticks after reload.</span>
+        <button id="grantBtn" class="chip primary">Enable on this site</button>
+      </div>
+
+      <div id="lockedBanner" class="banner warn hidden">
+        <span>You've got focus working on 2 sites. Unlock every site — one-time payment, yours forever.</span>
+        <button id="unlockBtn" class="chip primary">Unlock</button>
+      </div>
+
+      <ul id="ruleList" class="rules"></ul>
+      <p id="noRules" class="muted hidden">Nothing blurred here yet. Hit the button above and click what distracts you.</p>
+
+      <div id="presetBlock" class="hidden">
+        <h2 id="presetTitle"></h2>
+        <ul id="presetList" class="presets"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <button id="optionsBtn" class="linkish">⚙ Settings</button>
+    <button id="shortcutBtn" class="linkish">⌨ Shortcut</button>
+    <button id="upgradeBtn" class="linkish upgrade hidden">✨ Upgrade</button>
+  </footer>
+
+  <script src="../lib/ExtPay.js"></script>
+  <script src="../lib/presets.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

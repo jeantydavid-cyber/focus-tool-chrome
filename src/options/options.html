@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Blur Distractions — Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main>
+    <h1><img src="../icons/icon48.png" width="28" height="28" alt=""> Blur Distractions</h1>
+    <p id="planLine" class="muted"></p>
+
+    <section>
+      <h2>Peek friction <span id="proTag" class="pro hidden">Pro</span></h2>
+      <p class="muted">The small pause between impulse and action. Long enough to interrupt autopilot, short enough to not feel punished.</p>
+
+      <div class="row">
+        <label for="peekHold">Hold to reveal</label>
+        <input type="range" id="peekHold" min="500" max="3000" step="100">
+        <output id="peekHoldOut"></output>
+      </div>
+      <div class="row">
+        <label for="peekDuration">Reveal duration</label>
+        <input type="range" id="peekDuration" min="5" max="30" step="1">
+        <output id="peekDurationOut"></output>
+      </div>
+      <p id="proNote" class="muted hidden">Adjusting peek timing is a Pro feature — the free tier uses the defaults (1.5&nbsp;s hold, 10&nbsp;s reveal). <button id="upgradeInline" class="linkish">Upgrade</button></p>
+    </section>
+
+    <section>
+      <h2>Blur intensity</h2>
+      <div class="row radios" role="radiogroup" aria-label="Blur intensity">
+        <label><input type="radio" name="blurPx" value="6"> Soft (6px)</label>
+        <label><input type="radio" name="blurPx" value="12"> Standard (12px)</label>
+        <label><input type="radio" name="blurPx" value="20"> Heavy (20px)</label>
+      </div>
+    </section>
+
+    <section>
+      <h2>Keyboard shortcut</h2>
+      <p class="muted">Default is <kbd>Alt+B</kbd> to start the element picker. Change it on Chrome's shortcuts page.</p>
+      <button id="shortcutBtn" class="btn">Open shortcut settings</button>
+    </section>
+
+    <section>
+      <h2>Backup <span class="pro" id="backupPro">Pro</span></h2>
+      <p class="muted">Export your rules as a JSON file, or restore them on another profile.</p>
+      <div class="row">
+        <button id="exportBtn" class="btn">Export rules</button>
+        <button id="importBtn" class="btn">Import rules</button>
+        <input type="file" id="importFile" accept="application/json" hidden>
+      </div>
+      <p id="backupStatus" class="muted"></p>
+    </section>
+
+    <section id="upgradeSection" class="hidden">
+      <h2>Upgrade</h2>
+      <p class="muted">Free covers 2 sites. Pro unlocks every site, peek timing, and backup — one-time payment, yours forever.</p>
+      <button id="upgradeBtn" class="btn primary">Unlock Pro</button>
+    </section>
+
+    <footer class="muted">
+      Runs entirely in your browser. No account. No tracking. The extension only
+      gets access to a site when you choose to blur something on it.
+    </footer>
+  </main>
+
+  <script src="../lib/ExtPay.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

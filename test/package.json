@@ -1,0 +1,11 @@
+{
+  "name": "blur-distractions-tests",
+  "private": true,
+  "description": "Playwright smoke test for the Blur Distractions extension",
+  "scripts": {
+    "test": "node smoke.test.js"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0"
+  }
+}
