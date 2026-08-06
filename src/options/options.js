@@ -39,6 +39,69 @@ async function init() {
     $('importBtn').disabled = true;
     $('backupStatus').textContent = 'Backup is a Pro feature.';
   }
+
+  await renderSites();
+}
+
+async function renderSites() {
+  const res = await send({ type: 'sites:list' });
+  const list = $('siteList');
+  list.innerHTML = '';
+  const sites = (res && res.ok && res.sites) || [];
+  sites.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+  $('noSites').classList.toggle('hidden', sites.length > 0);
+
+  for (const site of sites) {
+    const pos = res.activeHosts.indexOf(site.host);
+    const locked = !res.paid && pos >= res.freeLimit;
+
+    const li = document.createElement('li');
+
+    const toggle = document.createElement('label');
+    toggle.className = 'switch';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = site.enabled;
+    cb.addEventListener('change', async () => {
+      await send({ type: 'site:toggle', host: site.host, enabled: cb.checked });
+      renderSites();
+    });
+    const slider = document.createElement('span');
+    slider.className = 'slider';
+    toggle.append(cb, slider);
+
+    const name = document.createElement('span');
+    name.className = 'site-name';
+    name.textContent = site.host;
+
+    const count = document.createElement('span');
+    count.className = 'site-count';
+    const n = site.rules.length;
+    count.textContent = `${n} blur${n === 1 ? '' : 's'}`;
+
+    li.append(toggle, name, count);
+
+    if (locked) {
+      const badge = document.createElement('span');
+      badge.className = 'badge';
+      badge.textContent = 'Locked (free plan)';
+      badge.title = 'The free plan covers 2 sites. Upgrade to activate this one.';
+      li.appendChild(badge);
+    }
+
+    const del = document.createElement('button');
+    del.className = 'icon-btn';
+    del.textContent = '✕';
+    del.title = `Remove all blurs on ${site.host}`;
+    del.addEventListener('click', async () => {
+      if (!confirm(`Remove all ${n} blur${n === 1 ? '' : 's'} on ${site.host}?`)) return;
+      await send({ type: 'site:delete', host: site.host });
+      renderSites();
+    });
+    li.appendChild(del);
+
+    list.appendChild(li);
+  }
 }
 
 function renderOutputs() {

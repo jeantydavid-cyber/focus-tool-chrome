@@ -340,6 +340,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         return { ok: true };
       }
 
+      case 'site:delete': {
+        await chrome.storage.sync.remove(siteKey(msg.host));
+        await unregisterSiteScript(msg.host);
+        await notifyHostTabs(msg.host);
+        return { ok: true };
+      }
+
       case 'site:toggle': {
         const site = await getSite(msg.host);
         if (!site) return { ok: false };
