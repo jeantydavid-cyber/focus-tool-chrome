@@ -42,4 +42,4 @@ with a new date. Since Softspot collects nothing, changes are unlikely.
 
 ## Contact
 
-Questions? Email jeanty.david@gmail.com.
+Questions? Email getsoftspot@gmail.com.
