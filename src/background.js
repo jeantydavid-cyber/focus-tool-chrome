@@ -373,6 +373,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         return { ok: true, settings };
       }
 
+      case 'permission:request': {
+        // A click in the page (toast button) rides its user gesture through
+        // messaging, which lets the worker show the permission prompt.
+        const granted = await ensureSiteAccess(msg.host);
+        if (granted) await notifyHostTabs(msg.host);
+        return { ok: true, granted };
+      }
+
       case 'permission:granted': {
         // Popup/onboarding already ran chrome.permissions.request successfully.
         await registerSiteScript(msg.host);

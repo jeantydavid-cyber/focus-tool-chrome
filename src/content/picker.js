@@ -170,17 +170,41 @@
         return;
       }
       if (window.__bd) window.__bd.refresh();
-      const buttons = [
-        { text: 'Undo', secondary: true, onClick: () => undoRule(rule) }
-      ];
-      if (generalized) {
-        buttons.push({ text: 'Blur all similar', onClick: () => blurAllSimilar(rule) });
+      if (res.needsPermission) {
+        // Chrome didn't let us ask for site access yet. Offer it here, on a
+        // fresh click, so the blur survives reloads without popup spelunking.
+        toast('Blurred for now. Allow access so it stays blurred after reload.', [
+          { text: 'Undo', secondary: true, onClick: () => undoRule(rule) },
+          {
+            text: 'Keep it blurred',
+            onClick: () => {
+              chrome.runtime.sendMessage({ type: 'permission:request', host: location.hostname }, (r) => {
+                if (r && r.granted) {
+                  showConfirmToast(rule, generalized, 'Done. This stays blurred on every visit.');
+                } else {
+                  toast('Chrome blocked the request. Click the extension icon and use "Enable on this site".', [], 9000);
+                }
+              });
+            }
+          }
+        ], 15000);
+        return;
       }
-      toast(`Blurred “${rule.label}”.`, buttons);
+      showConfirmToast(rule, generalized);
     });
   }
 
   // ---------- toast actions ----------
+
+  function showConfirmToast(rule, generalized, text) {
+    const buttons = [
+      { text: 'Undo', secondary: true, onClick: () => undoRule(rule) }
+    ];
+    if (generalized) {
+      buttons.push({ text: 'Blur all similar', onClick: () => blurAllSimilar(rule) });
+    }
+    toast(text || `Blurred “${rule.label}”.`, buttons);
+  }
 
   function undoRule(rule) {
     chrome.runtime.sendMessage({ type: 'rule:delete', host: location.hostname, ruleId: rule.id }, () => {
