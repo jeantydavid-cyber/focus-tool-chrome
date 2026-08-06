@@ -101,8 +101,9 @@ Softspot wordmark + the three-bars logo on the purple gradient, tagline:
   - `host_permissions (extensionpay.com)`: required by the ExtensionPay
     payments library to process the optional Pro upgrade.
 - **Remote code:** none. All code ships in the package.
-- **Privacy policy URL:** host `docs/privacy-policy.md` publicly (GitHub
-  Pages, or paste into a public gist) and use that URL.
+- **Privacy policy URL:** the `site/` folder in this repo is a ready
+  landing page + privacy page. Host it on GitHub Pages (public repo
+  "softspot-site") and use https://<user>.github.io/softspot-site/privacy.html
 
 ---
 

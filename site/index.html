@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Softspot. Blur distractions on any website.</title>
+  <meta name="description" content="Softspot is a browser extension that blurs the distracting parts of any website. Feeds, sidebars, comments. Still there if you need them, behind a deliberate pause.">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --accent: #7c5cff;
+      --accent-2: #6e4fe8;
+      --bg: #ffffff; --fg: #1c1a26; --muted: #6f6b80; --line: #e7e4f2; --card: #f6f5fb;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #12101a; --fg: #eceaf6; --muted: #9a95ad; --line: #2c2938; --card: #1c1926; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 16px/1.65 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--fg); }
+    a { color: var(--accent); }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 0 22px; }
+
+    header.site { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 19px; }
+    .brand svg { display: block; }
+    nav a { margin-left: 18px; text-decoration: none; color: var(--muted); font-weight: 600; font-size: 14.5px; }
+    nav a:hover { color: var(--fg); }
+
+    .hero { text-align: center; padding: 56px 0 30px; }
+    .hero h1 { font-size: clamp(30px, 5.5vw, 46px); line-height: 1.15; margin: 0 0 16px; letter-spacing: -0.02em; }
+    .hero p.sub { font-size: clamp(16px, 2.4vw, 19px); color: var(--muted); max-width: 620px; margin: 0 auto 30px; }
+    .cta {
+      display: inline-block; padding: 14px 26px; border-radius: 12px; text-decoration: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; font-weight: 700;
+      box-shadow: 0 8px 24px rgba(124, 92, 255, 0.35);
+    }
+    .cta:hover { filter: brightness(1.08); }
+    .cta-note { display: block; margin-top: 12px; color: var(--muted); font-size: 13.5px; }
+
+    .demo {
+      border: 1px solid var(--line); border-radius: 18px; background: var(--card);
+      padding: 26px; margin: 40px auto 0; max-width: 520px;
+    }
+    .post { height: 58px; border-radius: 10px; background: var(--line); margin-bottom: 12px; position: relative; }
+    .post::before { content: ""; position: absolute; inset: 11px 55% 11px 12px; border-radius: 6px; background: var(--muted); opacity: .45; }
+    .post:last-child { margin-bottom: 0; }
+    .post.target { animation: blurloop 5s ease-in-out infinite; }
+    .cursor { position: absolute; font-size: 22px; right: 16%; top: 38%; animation: cursorloop 5s ease-in-out infinite; }
+    @keyframes blurloop { 0%, 24% { filter: none; } 34%, 100% { filter: blur(7px) grayscale(40%); } }
+    @keyframes cursorloop {
+      0% { transform: translate(30px, 26px); opacity: 0; }
+      12% { transform: translate(0, 0); opacity: 1; }
+      26% { transform: scale(1); } 30% { transform: scale(0.8); }
+      36% { transform: scale(1); opacity: 1; } 55%, 100% { opacity: 0; }
+    }
+
+    section { padding: 46px 0 8px; }
+    h2 { font-size: 24px; margin: 0 0 22px; letter-spacing: -0.01em; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .tile { border: 1px solid var(--line); border-radius: 14px; background: var(--card); padding: 20px; }
+    .tile h3 { margin: 0 0 8px; font-size: 16px; }
+    .tile p { margin: 0; color: var(--muted); font-size: 14.5px; }
+    .tile .emoji { font-size: 22px; display: block; margin-bottom: 10px; }
+
+    ol.how { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+    ol.how li { display: flex; gap: 14px; align-items: center; border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; background: var(--card); }
+    .num { flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+    kbd { padding: 2px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); font: 700 14px/1.4 ui-monospace, monospace; }
+
+    .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+    .plan { border: 1px solid var(--line); border-radius: 16px; background: var(--card); padding: 26px; }
+    .plan.pro { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+    .plan h3 { margin: 0; font-size: 17px; }
+    .price { font-size: 34px; font-weight: 800; margin: 10px 0 2px; }
+    .price small { font-size: 14px; font-weight: 600; color: var(--muted); }
+    .plan ul { padding-left: 18px; margin: 14px 0 0; color: var(--muted); font-size: 14.5px; }
+    .plan ul li { margin-bottom: 6px; }
+
+    details { border: 1px solid var(--line); border-radius: 12px; background: var(--card); padding: 14px 18px; margin-bottom: 10px; }
+    summary { font-weight: 700; cursor: pointer; }
+    details p { color: var(--muted); margin: 10px 0 2px; }
+
+    footer.site { border-top: 1px solid var(--line); margin-top: 56px; padding: 28px 0 40px; color: var(--muted); font-size: 14px; }
+    footer.site .wrap { display: flex; flex-wrap: wrap; gap: 10px 26px; align-items: center; justify-content: space-between; }
+    footer.site a { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="site">
+      <span class="brand">
+        <svg width="26" height="26" viewBox="0 0 56 56" aria-hidden="true">
+          <rect x="1" y="1" width="54" height="54" rx="13" fill="#7c5cff"/>
+          <rect x="14" y="15" width="28" height="6" rx="3" fill="#fff"/>
+          <rect x="14" y="25" width="28" height="6" rx="3" fill="#fff" opacity="0.55" filter="blur(2px)"/>
+          <rect x="14" y="35" width="24" height="6" rx="3" fill="#fff"/>
+        </svg>
+        Softspot
+      </span>
+      <nav>
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="privacy.html">Privacy</a>
+      </nav>
+    </header>
+
+    <div class="hero">
+      <h1>Put the noise out of focus.</h1>
+      <p class="sub">Softspot is a browser extension that blurs the distracting parts of any website. Feeds, sidebars, comments, thumbnails. Everything stays where it was, just out of your attention's reach.</p>
+      <a class="cta" id="install" href="#pricing">Add Softspot to Chrome</a>
+      <span class="cta-note">Free on 2 sites. No account, no tracking.</span>
+
+      <div class="demo" aria-hidden="true">
+        <div class="post"></div>
+        <div class="post target"><span class="cursor">🎯</span></div>
+        <div class="post"></div>
+      </div>
+    </div>
+
+    <section id="how">
+      <h2>How it works</h2>
+      <ol class="how">
+        <li><span class="num">1</span><span>Press <kbd>Alt+B</kbd> on any website, or click the Softspot icon.</span></li>
+        <li><span class="num">2</span><span>Click the thing that distracts you: a feed, a sidebar, comments.</span></li>
+        <li><span class="num">3</span><span>Done. It stays blurred on every visit until you say otherwise.</span></li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Gentler than a blocker</h2>
+      <div class="grid">
+        <div class="tile"><span class="emoji">👁</span><h3>Peek, deliberately</h3><p>Need the content after all? Hold the peek button for a moment and it reveals for a few seconds, then gently fades back. That tiny pause is usually all it takes to remember what you came for.</p></div>
+        <div class="tile"><span class="emoji">🎯</span><h3>Works on any site</h3><p>No hardcoded site list. Point at anything on any website and blur it. One-click presets included for YouTube, X, LinkedIn, Facebook, Reddit, and Instagram.</p></div>
+        <div class="tile"><span class="emoji">🧠</span><h3>Built for distractible brains</h3><p>Made with ADHD in mind. No shame, no lockouts, nothing deleted. The feed is still there if you truly need it. It just costs a deliberate moment.</p></div>
+        <div class="tile"><span class="emoji">🔒</span><h3>Private, for real</h3><p>Runs entirely in your browser. No account, no analytics, no tracking. Softspot only gets access to a site when you choose to blur something on it.</p></div>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <h2>Pricing</h2>
+      <div class="plans">
+        <div class="plan">
+          <h3>Free</h3>
+          <div class="price">€0</div>
+          <ul>
+            <li>Unlimited blurs on up to 2 sites</li>
+            <li>All presets included</li>
+            <li>Hold-to-peek with re-blur</li>
+          </ul>
+        </div>
+        <div class="plan pro">
+          <h3>Pro</h3>
+          <div class="price">€19 <small>one time</small></div>
+          <ul>
+            <li>Every site, unlimited</li>
+            <li>Adjustable peek timing</li>
+            <li>Rule backup and restore</li>
+            <li>Yours forever. No subscription.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <h2>Questions</h2>
+      <details>
+        <summary>Why blur instead of block?</summary>
+        <p>Blocking breaks pages and invites workarounds; you just open another browser. A blur keeps the page intact and working. It removes the pull of the content without pretending it doesn't exist. Softer, and for many of us, far more effective.</p>
+      </details>
+      <details>
+        <summary>What does Softspot see about my browsing?</summary>
+        <p>Nothing. There are no servers, no analytics, and no account. Your blur rules live in your browser's own storage. Softspot only gains access to a site when you blur something there, and you can revoke that per site at any time. See the <a href="privacy.html">privacy policy</a>.</p>
+      </details>
+      <details>
+        <summary>How does the peek pause work?</summary>
+        <p>Hover a blurred area and hold the peek button for about a second and a half. The content reveals for ten seconds, then gently re-blurs. Pro users can tune both timings.</p>
+      </details>
+      <details>
+        <summary>How do payments and refunds work?</summary>
+        <p>The Pro upgrade is a one-time payment processed securely by Stripe through ExtensionPay. Your card details never touch us. Not happy? Email us within 14 days of purchase for a full refund, no questions asked.</p>
+      </details>
+      <details>
+        <summary>Which browsers are supported?</summary>
+        <p>Google Chrome and Microsoft Edge, and Chromium-based browsers that support Manifest V3 extensions.</p>
+      </details>
+    </section>
+
+    <footer class="site">
+      <div class="wrap" style="padding:0">
+        <span>© 2026 Softspot · Sold by David Jeanty</span>
+        <span>
+          <a href="mailto:jeanty.david@gmail.com">jeanty.david@gmail.com</a> ·
+          <a href="privacy.html">Privacy policy</a> ·
+          <span>14-day money-back guarantee</span>
+        </span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
