@@ -1,4 +1,4 @@
-# Blur Distractions: Hide Feeds & Focus (ADHD)
+# Softspot: Blur Distractions, Hide Feeds & Focus
 
 Point at anything on any website and blur it, permanently. Feeds, sidebars,
 comments, thumbnails. The content is still there if you truly need it, but it
@@ -75,7 +75,7 @@ Licensing uses [ExtensionPay](https://extensionpay.com). Before release:
 3. The `https://extensionpay.com/*` host permission and content script in the
    manifest are required by ExtPay, so leave them in place.
 
-Until the id is registered, licensing calls fail closed to the free tier
+The product name is Softspot; the ExtPay id string stays `blur-distractions` because that is the id registered on extensionpay.com. Until the id is registered, licensing calls fail closed to the free tier
 (cached last-known status, 1.5 s timeout), so development works offline.
 
 ## Testing

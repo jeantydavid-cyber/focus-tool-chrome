@@ -1,4 +1,4 @@
-/* Blur Distractions: page-injected styles. Everything is namespaced bd-. */
+/* Softspot: page-injected styles. Everything is namespaced bd-. */
 
 /* The blur itself (spec §2.1). Interaction is blocked by the per-element
    overlay (which also hosts the peek button), not by pointer-events on the

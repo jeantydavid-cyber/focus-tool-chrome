@@ -68,7 +68,7 @@ $('exportBtn').addEventListener('click', async () => {
   const blob = new Blob([JSON.stringify(res.data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'blur-distractions-rules.json';
+  a.download = 'softspot-rules.json';
   a.click();
   URL.revokeObjectURL(a.href);
   $('backupStatus').textContent = 'Exported.';
@@ -85,7 +85,7 @@ $('importFile').addEventListener('change', async (e) => {
       ? `Imported ${res.imported} entries. Sites you blur will re-ask for access on first visit.`
       : 'Import failed' + (res && res.reason === 'paywall' ? ' (Pro feature).' : '.');
   } catch {
-    $('backupStatus').textContent = "That file doesn't look like a Blur Distractions export.";
+    $('backupStatus').textContent = "That file doesn't look like a Softspot export.";
   }
   e.target.value = '';
 });
