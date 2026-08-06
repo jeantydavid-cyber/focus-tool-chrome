@@ -17,6 +17,7 @@ async function init() {
     ? 'Pro: every site unlocked. Thank you for supporting an indie tool. ✨'
     : 'Free plan: blur on up to 2 sites.';
   $('upgradeSection').classList.toggle('hidden', paid);
+  $('manageBtn').classList.toggle('hidden', !paid);
   $('proTag').classList.toggle('hidden', paid);
   $('proNote').classList.toggle('hidden', paid);
 
@@ -60,6 +61,7 @@ document.querySelectorAll('input[name="blurPx"]').forEach((r) =>
 
 $('shortcutBtn').addEventListener('click', () => chrome.tabs.create({ url: 'chrome://extensions/shortcuts' }));
 $('upgradeBtn').addEventListener('click', () => extpay.openPaymentPage());
+$('manageBtn').addEventListener('click', () => extpay.openPaymentPage());
 $('upgradeInline').addEventListener('click', () => extpay.openPaymentPage());
 
 $('exportBtn').addEventListener('click', async () => {
