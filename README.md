@@ -71,7 +71,7 @@ Licensing uses [ExtensionPay](https://extensionpay.com). Before release:
 1. Register the extension at extensionpay.com with id **`blur-distractions`**
    (or change the id passed to `ExtPay(...)` in `background.js`, `popup/popup.js`,
    and `options/options.js`).
-2. Set the one-time price (€19 per spec §2.6).
+2. Set the one-time price (4.99 USD).
 3. The `https://extensionpay.com/*` host permission and content script in the
    manifest are required by ExtPay, so leave them in place.
 

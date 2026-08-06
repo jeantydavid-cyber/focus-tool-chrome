@@ -109,7 +109,7 @@ Softspot wordmark + the three-bars logo on the purple gradient, tagline:
 
 ## Publishing checklist
 
-- [ ] ExtensionPay: price set to 19 EUR one-time, test plan removed
+- [ ] ExtensionPay: price set to 4.99 USD one-time, test plan removed
 - [ ] ExtensionPay: Stripe connected (live charges enabled)
 - [ ] Fresh test: reset to unpaid, full free-tier walkthrough, test purchase
 - [ ] `cd src && zip -r ../softspot.zip .` (manifest.json at zip root)
