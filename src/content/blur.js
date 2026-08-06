@@ -1,5 +1,5 @@
 /*
- * blur.js — applies blur rules on page load, keeps them applied through SPA
+ * blur.js: applies blur rules on page load, keeps them applied through SPA
  * navigations and lazy loading, and hosts the peek (👁) interaction.
  *
  * Runs either as a registered content script (sites the user granted) or
@@ -40,7 +40,7 @@
         scheduleStaleReport();
       });
     } catch {
-      /* extension reloaded / context invalidated — nothing to do */
+      /* extension reloaded / context invalidated: nothing to do */
     }
   }
 
@@ -83,7 +83,7 @@
       state.lastMatchCounts[rule.id] = els.length;
       for (const el of els) desired.add(el);
     }
-    // Drop nested matches — blurring an ancestor already covers the child.
+    // Drop nested matches: blurring an ancestor already covers the child.
     for (const el of [...desired]) {
       for (let p = el.parentElement; p; p = p.parentElement) {
         if (desired.has(p)) { desired.delete(el); break; }
@@ -158,6 +158,9 @@
       btn.classList.remove('bd-holding');
       btn.querySelector('.bd-ring-fill').style.transition = 'none';
     };
+    // Layout may have shifted since the last sync; fix alignment the moment
+    // the pointer arrives so the peek button never shows over the wrong spot.
+    ov.addEventListener('pointerenter', () => positionOverlay(el, ov));
     btn.addEventListener('pointerdown', startHold);
     btn.addEventListener('pointerup', cancelHold);
     btn.addEventListener('pointerleave', cancelHold);
@@ -242,7 +245,7 @@
     setTimeout(() => {
       state.applyQueued = false;
       if (location.href !== state.lastUrl) {
-        // SPA route change — re-evaluate everything.
+        // SPA route change: re-evaluate everything.
         state.lastUrl = location.href;
         state.staleReported = true; // don't stale-count mid-navigation
       }
@@ -270,6 +273,13 @@
     if (window.navigation && window.navigation.addEventListener) {
       window.navigation.addEventListener('navigatesuccess', scheduleApply);
     }
+    // Sites like YouTube move content without mutating near the blurred
+    // element (player resizes, lazy images settle). A cheap heartbeat plus a
+    // page-level ResizeObserver keeps the peek zones glued to their elements.
+    if (window.ResizeObserver) {
+      new ResizeObserver(repositionOverlays).observe(document.documentElement);
+    }
+    setInterval(() => { if (state.overlays.size) repositionOverlays(); }, 700);
   }
 
   // ---------- stale tracking (spec §2.3.4) ----------

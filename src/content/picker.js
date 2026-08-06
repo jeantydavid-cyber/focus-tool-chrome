@@ -1,5 +1,5 @@
 /*
- * picker.js — element picker overlay (spec §2.2).
+ * picker.js: element picker overlay (spec §2.2).
  * Injected on demand (hotkey or popup button) together with selector.js and
  * blur.js. Hover highlights, click blurs, Esc cancels.
  */
@@ -16,7 +16,6 @@
     active: false,
     root: null,
     highlight: null,
-    label: null,
     hint: null,
     hovered: null,
     toastTimer: null,
@@ -47,11 +46,6 @@
     picker.highlight.style.display = 'none';
     root.appendChild(picker.highlight);
 
-    picker.label = document.createElement('div');
-    picker.label.className = 'bd-picker-label';
-    picker.label.style.display = 'none';
-    root.appendChild(picker.label);
-
     picker.hint = document.createElement('div');
     picker.hint.className = 'bd-picker-hint';
     picker.hint.innerHTML = 'Click an element to blur it · <kbd>Esc</kbd> to cancel';
@@ -71,8 +65,8 @@
   function deactivate() {
     if (!picker.active) return;
     picker.active = false;
-    for (const el of [picker.highlight, picker.label, picker.hint]) el && el.remove();
-    picker.highlight = picker.label = picker.hint = null;
+    for (const el of [picker.highlight, picker.hint]) el && el.remove();
+    picker.highlight = picker.hint = null;
     picker.hovered = null;
     if (window.__bd) window.__bd.setPicking(false);
     window.removeEventListener('mousemove', onMove, true);
@@ -109,7 +103,6 @@
     if (!el || isOurNode(el) || el === document.documentElement || el === document.body) {
       picker.hovered = null;
       if (picker.highlight) picker.highlight.style.display = 'none';
-      if (picker.label) picker.label.style.display = 'none';
       return;
     }
     if (el === picker.hovered) return;
@@ -123,11 +116,6 @@
       width: r.width + 'px',
       height: r.height + 'px'
     });
-    picker.label.style.display = 'block';
-    picker.label.textContent = S.describe(el);
-    const labelTop = r.top > 34 ? r.top - 28 : Math.min(r.bottom + 6, window.innerHeight - 30);
-    picker.label.style.top = labelTop + 'px';
-    picker.label.style.left = Math.max(6, r.left) + 'px';
   }
 
   function tooBig(el) {
@@ -147,7 +135,7 @@
 
     // Failsafe (spec §3)
     if (tooBig(el)) {
-      toast('That would blur the whole page — pick something smaller.', []);
+      toast('That would blur the whole page. Pick something smaller.', []);
       return;
     }
 
@@ -177,10 +165,8 @@
         return;
       }
       if (res.locked) {
-        // Paywall moment (spec §2.6) — the rule is saved, just inactive.
-        toast("You've got focus working on 2 sites. Unlock every site — one-time payment, yours forever.", [
-          { text: 'Unlock', onClick: () => chrome.runtime.sendMessage({ type: 'extpay:openPayment' }) }
-        ], 12000);
+        // Paywall moment (spec §2.6): the rule is saved, just inactive.
+        showPaywall();
         return;
       }
       if (window.__bd) window.__bd.refresh();
@@ -215,6 +201,62 @@
         ]);
       }
     );
+  }
+
+  function showPaywall() {
+    const root = ensureRoot();
+    const existing = root.querySelector('.bd-paywall-backdrop');
+    if (existing) existing.remove();
+
+    const backdrop = document.createElement('div');
+    backdrop.className = 'bd-paywall-backdrop';
+    backdrop.setAttribute('role', 'dialog');
+    backdrop.setAttribute('aria-modal', 'true');
+    backdrop.setAttribute('aria-label', 'Upgrade to unlock every site');
+
+    const card = document.createElement('div');
+    card.className = 'bd-paywall';
+    card.innerHTML =
+      '<svg class="bd-paywall-logo" viewBox="0 0 56 56" aria-hidden="true">' +
+      '<rect x="1" y="1" width="54" height="54" rx="13" fill="#7c5cff"/>' +
+      '<rect x="14" y="15" width="28" height="6" rx="3" fill="#fff"/>' +
+      '<rect x="14" y="25" width="28" height="6" rx="3" fill="#fff" opacity="0.55" filter="blur(2px)"/>' +
+      '<rect x="14" y="35" width="24" height="6" rx="3" fill="#fff"/>' +
+      '</svg>' +
+      '<h1>Focus is working on 2 sites</h1>' +
+      '<p>The free plan covers two sites. Unlock every site and blur anything, anywhere.</p>';
+
+    const cta = document.createElement('button');
+    cta.type = 'button';
+    cta.className = 'bd-paywall-cta';
+    cta.textContent = 'Unlock every site';
+    cta.addEventListener('click', () => {
+      chrome.runtime.sendMessage({ type: 'extpay:openPayment' });
+      backdrop.remove();
+    });
+    card.appendChild(cta);
+
+    const sub = document.createElement('span');
+    sub.className = 'bd-paywall-sub';
+    sub.textContent = 'One-time payment. Yours forever, no subscription.';
+    card.appendChild(sub);
+
+    const later = document.createElement('button');
+    later.type = 'button';
+    later.className = 'bd-paywall-later';
+    later.textContent = 'Maybe later';
+    later.addEventListener('click', () => backdrop.remove());
+    card.appendChild(later);
+
+    backdrop.appendChild(card);
+    backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.remove(); });
+    const onEsc = (e) => {
+      if (e.key === 'Escape') { backdrop.remove(); window.removeEventListener('keydown', onEsc, true); }
+    };
+    window.addEventListener('keydown', onEsc, true);
+
+    root.appendChild(backdrop);
+    cta.focus();
   }
 
   function toast(text, buttons, ttl = 6000) {

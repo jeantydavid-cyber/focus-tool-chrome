@@ -1,6 +1,6 @@
-# Blur Distractions – Hide Feeds & Focus (ADHD)
+# Blur Distractions: Hide Feeds & Focus (ADHD)
 
-Point at anything on any website and blur it — permanently. Feeds, sidebars,
+Point at anything on any website and blur it, permanently. Feeds, sidebars,
 comments, thumbnails. The content is still there if you truly need it, but it
 costs a deliberate hold-to-peek to see. A small pause between impulse and action.
 
@@ -47,7 +47,7 @@ src/
   (`filter: blur(var(--bd-blur-px)) grayscale(40%)`, 200 ms transition).
   Interaction with blurred content is blocked by a transparent per-element
   overlay (document-absolute, so it scrolls with the page) which also hosts
-  the peek button — this keeps hover working while making blurred content
+  the peek button. This keeps hover working while making blurred content
   unclickable.
 - **Peek friction:** hover → 👁 button → press-and-hold (default 1.5 s,
   progress ring) → content reveals for 10 s → re-blurs. Keyboard users can
@@ -56,12 +56,12 @@ src/
   reject generated ids and hashed/utility classes; shortest unique path from
   the nearest stable anchor (max depth 5). Both a specific and a generalized
   selector are stored; apply tries specific first and falls back. Rules that
-  match nothing on 3 consecutive loads get a ⚠️ in the popup — never deleted.
+  match nothing on 3 consecutive loads get a ⚠️ in the popup, never deleted.
 - **Storage:** `chrome.storage.sync`, one key per site (`site:<host>`) to stay
   under the 8 KB/item limit; ~200 rules cap total.
 - **Free tier:** unlimited rules on 2 sites (counted as sites with ≥1 enabled
   rule, oldest first). Rules created beyond that are stored but inactive until
-  upgrade — user data is never deleted. Paywall appears exactly once: when the
+  upgrade; user data is never deleted. Paywall appears exactly once: when the
   user tries to blur on a third site.
 
 ## Monetization setup (before shipping)
@@ -73,7 +73,7 @@ Licensing uses [ExtensionPay](https://extensionpay.com). Before release:
    and `options/options.js`).
 2. Set the one-time price (€19 per spec §2.6).
 3. The `https://extensionpay.com/*` host permission and content script in the
-   manifest are required by ExtPay — leave them in place.
+   manifest are required by ExtPay, so leave them in place.
 
 Until the id is registered, licensing calls fail closed to the free tier
 (cached last-known status, 1.5 s timeout), so development works offline.

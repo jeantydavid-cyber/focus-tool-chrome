@@ -139,7 +139,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     const btnBox = await btn.boundingBox();
     await page.mouse.move(btnBox.x + btnBox.width / 2, btnBox.y + btnBox.height / 2);
     await page.mouse.down();
-    await sleep(250); // released before 600ms hold — must NOT reveal
+    await sleep(250); // released before 600ms hold: must NOT reveal
     await page.mouse.up();
     let peeked = await page.$eval('#sidebar', (el) => el.classList.contains('bd-peek'));
     check('short press does not reveal (hold friction)', !peeked);

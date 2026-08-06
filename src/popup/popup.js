@@ -1,4 +1,4 @@
-/* popup.js — rule list for the current site, toggles, presets, pause, upgrade. */
+/* popup.js: rule list for the current site, toggles, presets, pause, upgrade. */
 'use strict';
 
 const extpay = ExtPay('blur-distractions');
@@ -130,7 +130,7 @@ function renderRules() {
       const stale = document.createElement('span');
       stale.className = 'stale';
       stale.textContent = '⚠️';
-      stale.title = "This rule hasn't matched anything on the last few page loads — the site may have changed.";
+      stale.title = "This rule hasn't matched anything on the last few page loads. The site may have changed.";
       li.appendChild(stale);
     }
     li.append(edit, del);
@@ -210,7 +210,7 @@ document.querySelectorAll('#pauseMenu button').forEach((b) =>
     $('pauseMenu').classList.add('hidden');
     const minutes = Number(b.dataset.minutes) || 0;
     await send({ type: 'pause:set', paused: true, minutes });
-    $('pauseText').textContent = minutes ? `Paused — resumes in ${minutes} min.` : 'Paused everywhere.';
+    $('pauseText').textContent = minutes ? `Paused. Resumes in ${minutes} min.` : 'Paused everywhere.';
     refresh();
   })
 );

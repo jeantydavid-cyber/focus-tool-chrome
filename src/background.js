@@ -1,5 +1,5 @@
 /*
- * background.js — service worker.
+ * background.js: service worker.
  * Command handling, storage (chrome.storage.sync, one key per site),
  * free-tier enforcement, host-permission + dynamic content-script management,
  * and ExtensionPay licensing.
@@ -8,7 +8,7 @@
 
 importScripts('lib/ExtPay.js', 'lib/presets.js');
 
-const extpay = ExtPay('blur-distractions'); // ExtensionPay extension id — must match extensionpay.com registration
+const extpay = ExtPay('blur-distractions'); // ExtensionPay extension id: must match extensionpay.com registration
 extpay.startBackground();
 
 const FREE_SITE_LIMIT = 2;
@@ -35,7 +35,7 @@ async function isPaid() {
     await chrome.storage.local.set({ paidCache: !!user.paid });
     return !!user.paid;
   } catch {
-    // Offline / ExtensionPay unreachable — fall back to last known status.
+    // Offline / ExtensionPay unreachable: fall back to last known status.
     const { paidCache } = await chrome.storage.local.get('paidCache');
     return !!paidCache;
   }
@@ -51,7 +51,7 @@ extpay.onPaid.addListener(async () => {
 async function getSettings() {
   const { settings } = await chrome.storage.sync.get('settings');
   const merged = { ...DEFAULT_SETTINGS, ...(settings || {}) };
-  // Lazily clear an expired "resume in 30 min" pause — no alarms needed.
+  // Lazily clear an expired "resume in 30 min" pause: no alarms needed.
   if (merged.paused && merged.pausedUntil && Date.now() >= merged.pausedUntil) {
     merged.paused = false;
     merged.pausedUntil = null;
@@ -191,7 +191,7 @@ async function notifyHostTabs(host) {
     for (const tab of tabs) {
       chrome.tabs.sendMessage(tab.id, { type: 'rules:changed' }).catch(() => {});
     }
-  } catch { /* no permission for that host — nothing is running there anyway */ }
+  } catch { /* no permission for that host: nothing is running there anyway */ }
 }
 
 async function notifyAllSites() {

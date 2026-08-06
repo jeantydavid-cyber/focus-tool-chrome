@@ -1,5 +1,5 @@
 /*
- * presets.js — built-in rule bundles for the six v1 sites (spec §4).
+ * presets.js: built-in rule bundles for the six v1 sites (spec §4).
  * Hand-verified selectors; expect rot, keep the update cadence.
  *
  * Loaded in the popup, the onboarding page, and the background worker.

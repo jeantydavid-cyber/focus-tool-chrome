@@ -1,5 +1,5 @@
 /*
- * selector.js — robust CSS selector generation.
+ * selector.js: robust CSS selector generation.
  * Loaded as a content script alongside picker.js. Exposes window.__bdSelector.
  *
  * Strategy (spec §2.3):

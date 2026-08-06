@@ -1,4 +1,4 @@
-/* options.js — peek timing (Pro), blur intensity, shortcut info, export/import. */
+/* options.js: peek timing (Pro), blur intensity, shortcut info, export/import. */
 'use strict';
 
 const extpay = ExtPay('blur-distractions');
@@ -14,8 +14,8 @@ async function init() {
   const s = res.settings;
 
   $('planLine').textContent = paid
-    ? 'Pro — every site unlocked. Thank you for supporting an indie tool. ✨'
-    : 'Free plan — blur on up to 2 sites.';
+    ? 'Pro: every site unlocked. Thank you for supporting an indie tool. ✨'
+    : 'Free plan: blur on up to 2 sites.';
   $('upgradeSection').classList.toggle('hidden', paid);
   $('proTag').classList.toggle('hidden', paid);
   $('proNote').classList.toggle('hidden', paid);
@@ -83,7 +83,7 @@ $('importFile').addEventListener('change', async (e) => {
     const res = await send({ type: 'import:set', data });
     $('backupStatus').textContent = res && res.ok
       ? `Imported ${res.imported} entries. Sites you blur will re-ask for access on first visit.`
-      : 'Import failed' + (res && res.reason === 'paywall' ? ' — Pro feature.' : '.');
+      : 'Import failed' + (res && res.reason === 'paywall' ? ' (Pro feature).' : '.');
   } catch {
     $('backupStatus').textContent = "That file doesn't look like a Blur Distractions export.";
   }

@@ -1,4 +1,4 @@
-/* Blur Distractions — page-injected styles. Everything is namespaced bd-. */
+/* Blur Distractions: page-injected styles. Everything is namespaced bd-. */
 
 /* The blur itself (spec §2.1). Interaction is blocked by the per-element
    overlay (which also hosts the peek button), not by pointer-events on the
@@ -34,7 +34,7 @@
   pointer-events: none; /* don't swallow clicks while the picker is active */
 }
 
-/* Peek button (👁) — fades in on hover or keyboard focus. */
+/* Peek button (👁): fades in on hover or keyboard focus. */
 .bd-peek-btn {
   position: absolute;
   top: min(96px, calc(50% - 22px));
@@ -130,21 +130,6 @@
   transition: top 40ms linear, left 40ms linear, width 40ms linear, height 40ms linear;
 }
 
-.bd-picker-label {
-  position: fixed;
-  pointer-events: none;
-  padding: 4px 9px;
-  border-radius: 6px;
-  background: #17151f;
-  color: #e6e2ff;
-  font: 500 12px/1.2 ui-monospace, Menlo, monospace;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.15);
-  max-width: 60vw;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .bd-picker-hint {
   position: fixed;
   top: 14px;
@@ -162,6 +147,91 @@
   padding: 1px 6px;
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.16);
+}
+
+/* ---------- Paywall modal ---------- */
+
+.bd-paywall-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(12, 11, 18, 0.6);
+  backdrop-filter: blur(3px);
+  pointer-events: auto;
+  animation: bd-fade-in 160ms ease;
+}
+@keyframes bd-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.bd-paywall {
+  width: min(92vw, 420px);
+  padding: 34px 32px 28px;
+  border-radius: 18px;
+  background: #1d1a28;
+  color: #f0edfa;
+  text-align: center;
+  font: 400 15px/1.55 system-ui, -apple-system, sans-serif;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.09);
+  animation: bd-pop-in 200ms cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+@keyframes bd-pop-in {
+  from { opacity: 0; transform: scale(0.92) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.bd-paywall-logo {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 18px;
+  display: block;
+}
+.bd-paywall h1 {
+  margin: 0 0 10px;
+  font: 700 20px/1.3 system-ui, -apple-system, sans-serif;
+  color: #fff;
+}
+.bd-paywall p {
+  margin: 0 0 24px;
+  color: #b5aecf;
+}
+.bd-paywall .bd-paywall-cta {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  border: 0;
+  border-radius: 11px;
+  background: linear-gradient(135deg, #8b6bff, #6e4fe8);
+  color: #fff;
+  font: 700 15px/1 system-ui, -apple-system, sans-serif;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(124, 92, 255, 0.4);
+  transition: filter 120ms ease, transform 120ms ease;
+}
+.bd-paywall .bd-paywall-cta:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+.bd-paywall .bd-paywall-sub {
+  display: block;
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: #8f88a8;
+}
+.bd-paywall .bd-paywall-later {
+  margin-top: 14px;
+  border: 0;
+  background: none;
+  color: #8f88a8;
+  font: 500 13px/1 system-ui, -apple-system, sans-serif;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.bd-paywall .bd-paywall-later:hover {
+  color: #b5aecf;
 }
 
 /* ---------- Toast ---------- */

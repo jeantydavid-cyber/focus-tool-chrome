@@ -1,4 +1,4 @@
-/* onboarding.js — one-click presets on the first-run page. */
+/* onboarding.js: one-click presets on the first-run page. */
 'use strict';
 
 const { PRESETS, presetItemToRule } = window.__bdPresets;
