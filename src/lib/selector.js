@@ -129,7 +129,8 @@
 
   /**
    * Generalized selector: drops positional constraints so sibling cards/posts
-   * match too ("Blur all similar"). Returns null when it wouldn't widen the match.
+   * match too (used by presets and as a fallback when a specific selector
+   * stops matching). Returns null when it wouldn't widen the match.
    */
   function getGeneralized(el, specific) {
     specific = specific || getSpecific(el);

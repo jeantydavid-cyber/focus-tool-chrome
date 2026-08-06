@@ -180,7 +180,7 @@
             onClick: () => {
               chrome.runtime.sendMessage({ type: 'permission:request', host: location.hostname }, (r) => {
                 if (r && r.granted) {
-                  showConfirmToast(rule, generalized, 'Done. This stays blurred on every visit.');
+                  showConfirmToast(rule, 'Done. This stays blurred on every visit.');
                 } else {
                   toast('Chrome blocked the request. Click the extension icon and use "Enable on this site".', [], 9000);
                 }
@@ -190,20 +190,16 @@
         ], 15000);
         return;
       }
-      showConfirmToast(rule, generalized);
+      showConfirmToast(rule);
     });
   }
 
   // ---------- toast actions ----------
 
-  function showConfirmToast(rule, generalized, text) {
-    const buttons = [
+  function showConfirmToast(rule, text) {
+    toast(text || `Blurred “${rule.label}”.`, [
       { text: 'Undo', secondary: true, onClick: () => undoRule(rule) }
-    ];
-    if (generalized) {
-      buttons.push({ text: 'Blur all similar', onClick: () => blurAllSimilar(rule) });
-    }
-    toast(text || `Blurred “${rule.label}”.`, buttons);
+    ]);
   }
 
   function undoRule(rule) {
@@ -211,20 +207,6 @@
       if (window.__bd) window.__bd.refresh();
       toast('Removed.', [], 2500);
     });
-  }
-
-  function blurAllSimilar(rule) {
-    chrome.runtime.sendMessage(
-      { type: 'rule:update', host: location.hostname, ruleId: rule.id, patch: { mode: 'generalized' } },
-      () => {
-        if (window.__bd) window.__bd.refresh();
-        let count = 0;
-        try { count = document.querySelectorAll(rule.generalized).length; } catch { /* ignore */ }
-        toast(count > 1 ? `Blurred ${count} similar items.` : 'Blurred all similar items.', [
-          { text: 'Undo', secondary: true, onClick: () => undoRule(rule) }
-        ]);
-      }
-    );
   }
 
   function showPaywall() {

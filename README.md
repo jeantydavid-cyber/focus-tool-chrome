@@ -22,7 +22,7 @@ src/
                         host-permission + dynamic content-script management
   content/
     picker.js           element picker overlay (hover highlight, click to blur,
-                        Esc cancels, Undo / "Blur all similar" toast)
+                        Esc cancels, Undo toast)
     blur.js             applies rules on load; MutationObserver (250ms debounce)
                         + SPA URL-change handling; peek overlay w/ hold-to-confirm
     blur.css            blur styles, peek button + progress ring, picker outline
