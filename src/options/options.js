@@ -125,6 +125,7 @@ document.querySelectorAll('input[name="blurPx"]').forEach((r) =>
 $('shortcutBtn').addEventListener('click', () => chrome.tabs.create({ url: 'chrome://extensions/shortcuts' }));
 $('upgradeBtn').addEventListener('click', () => extpay.openPaymentPage());
 $('manageBtn').addEventListener('click', () => extpay.openPaymentPage());
+$('restoreBtn').addEventListener('click', () => extpay.openPaymentPage());
 $('upgradeInline').addEventListener('click', () => extpay.openPaymentPage());
 
 $('exportBtn').addEventListener('click', async () => {

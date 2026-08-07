@@ -254,6 +254,18 @@
     later.addEventListener('click', () => backdrop.remove());
     card.appendChild(later);
 
+    // Paying customers on a fresh machine land here too; the payment page
+    // has the "Already paid? Log in" flow that restores their purchase.
+    const restore = document.createElement('button');
+    restore.type = 'button';
+    restore.className = 'bd-paywall-later';
+    restore.textContent = 'Already paid? Restore your purchase';
+    restore.addEventListener('click', () => {
+      chrome.runtime.sendMessage({ type: 'extpay:openPayment' });
+      backdrop.remove();
+    });
+    card.appendChild(restore);
+
     backdrop.appendChild(card);
     backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.remove(); });
     const onEsc = (e) => {
