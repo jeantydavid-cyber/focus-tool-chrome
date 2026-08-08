@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 # Fit screenshots to the Chrome Web Store's required 1280x800.
 #
-#   ./fit-screenshot.sh ~/Desktop/screenshots         -> whole folder
-#   ./fit-screenshot.sh shot.png                      -> single file
-#   ./fit-screenshot.sh ~/Desktop/screenshots crop    -> crop instead of pad
+#   ./fit-screenshot.sh ~/Desktop/screenshots           -> whole folder (scales)
+#   ./fit-screenshot.sh shot.png                        -> single file
+#   ./fit-screenshot.sh ~/Desktop/screenshots crop      -> fill frame, trim edges
+#   ./fit-screenshot.sh ~/Desktop/screenshots native    -> NO scaling, cut a
+#                                                          1280x800 window out
+#                                                          of the original
+#
+# Use "native" when text looks soft: it never resizes, so pixels stay exactly
+# as sharp as they were on screen. You see less of the picture in exchange.
 #
 # Results are written to a "ready" subfolder next to the originals.
 # Originals are never modified.
@@ -16,7 +22,10 @@ MODE="fit"
 
 args=()
 for a in "$@"; do
-  if [ "$a" = "crop" ]; then MODE="crop"; else args+=("$a"); fi
+  case "$a" in
+    crop|native) MODE="$a" ;;
+    *) args+=("$a") ;;
+  esac
 done
 
 if [ ${#args[@]} -eq 0 ]; then
@@ -61,7 +70,12 @@ for src in "${files[@]}"; do
   base="$(basename "${src%.*}")"
   out="$outdir/${base}.png"
 
-  if [ "$MODE" = "crop" ]; then
+  if [ "$MODE" = "native" ]; then
+    # No resizing at all: cut a 1280x800 window from the top-centre of the
+    # original (where browser content lives). Sharpest possible result.
+    # If the source is smaller than the frame, it gets padded instead.
+    "$IM" "$src" -gravity north -background "$PAD_COLOR" -extent 1280x800 "$out"
+  elif [ "$MODE" = "crop" ]; then
     # Fill the frame, then trim the overflow. No bars, loses the edges.
     "$IM" "$src" -resize 1280x800^ -gravity center -extent 1280x800 "$out"
   else
