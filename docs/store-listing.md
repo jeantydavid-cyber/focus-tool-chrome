@@ -48,7 +48,7 @@ Made with ADHD in mind, without shame or lockouts. Nothing is forbidden, nothing
 
 FREE AND PRO
 Free: unlimited blurs on up to 2 sites, all presets included.
-Pro: every site, adjustable peek timing, rule backup. One-time payment, yours forever. No subscription.
+Pro ($4.99, one time): every site, adjustable peek timing, rule backup. Yours forever. No subscription.
 
 WHY BLUR INSTEAD OF BLOCK?
 Blocking breaks pages and invites workarounds; you just open another browser. A blur keeps the page intact and working. It removes the pull of the content without pretending it doesn't exist. Softer, and for many of us, far more effective.
@@ -101,9 +101,9 @@ Softspot wordmark + the three-bars logo on the purple gradient, tagline:
   - `host_permissions (extensionpay.com)`: required by the ExtensionPay
     payments library to process the optional Pro upgrade.
 - **Remote code:** none. All code ships in the package.
-- **Privacy policy URL:** the `site/` folder in this repo is a ready
-  landing page + privacy page. Host it on GitHub Pages (public repo
-  "softspot-site") and use https://<user>.github.io/softspot-site/privacy.html
+- **Privacy policy URL:** your live Netlify page, ending in /privacy.html
+  (for example https://softspot.netlify.app/privacy.html). It must load
+  publicly before you submit; reviewers check it.
 
 ---
 
