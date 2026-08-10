@@ -26,19 +26,13 @@ Softspot lets you point at anything on any website and blur it. The content stay
 
 HOW IT WORKS
 1. Press Alt+B on any website (or click the Softspot icon)
-2. Click the thing that distracts you: a feed, a sidebar, comments
+2. Click the thing that distracts you
 3. Done. It stays blurred, on every visit, until you say otherwise
 
 Need the content after all? Hover the blur and hold the peek button. It reveals for a few seconds, then gently fades back. The pause is the point: long enough to interrupt autopilot, short enough to never feel punished.
 
-ONE-CLICK PRESETS
-Hand-tuned blur rules, ready to apply:
-• YouTube: related videos, Shorts, comments, homepage grid
-• X / Twitter: timeline, trends, who to follow
-• LinkedIn: feed, news sidebar
-• Facebook: feed, stories, reels
-• Reddit: home feed, sidebar
-• Instagram: feed, explore, reels
+READY-MADE RULES
+Some pages are harder to tame than others, so Softspot ships with prepared blur rules for a handful of the busiest sites. Switch them on with one click from the toolbar, then adjust or remove any of them however you like.
 
 PRIVACY, FOR REAL
 Softspot runs entirely in your browser. No account. No tracking. No analytics. It only gets access to a site when YOU choose to blur something on it. Most extensions ask for access to every website at install; Softspot never does.
@@ -47,12 +41,25 @@ BUILT FOR DISTRACTIBLE BRAINS
 Made with ADHD in mind, without shame or lockouts. Nothing is forbidden, nothing is deleted. The feed is still there if you truly need it. It just costs a deliberate moment, and that moment belongs to you.
 
 FREE AND PRO
-Free: unlimited blurs on up to 2 sites, all presets included.
+Free: unlimited blurs on up to 2 sites.
 Pro ($4.99, one time): every site, adjustable peek timing, rule backup. Yours forever. No subscription.
 
 WHY BLUR INSTEAD OF BLOCK?
 Blocking breaks pages and invites workarounds; you just open another browser. A blur keeps the page intact and working. It removes the pull of the content without pretending it doesn't exist. Softer, and for many of us, far more effective.
 ```
+
+## If rejected again for keyword spam
+
+The title is the only remaining keyword-dense field. Safer fallback:
+
+```
+Softspot: blur distractions on any website
+```
+
+Losing the extra search terms costs some discoverability, so only change
+the title if a second rejection names it.
+
+---
 
 ## Category
 
