@@ -46,7 +46,7 @@ No shame screens, no streaks, no lecture. It just makes the pull quieter.
 
 It is free on two sites. I put it on the Chrome store as a one time $4.99 unlock for unlimited sites because I would rather charge once than run a subscription for something this small. Not tracking anything, no account, and it only gets access to a site when you blur something there.
 
-[STORE LINK]
+https://chromewebstore.google.com/detail/ldheigmdmfcafdmieipgclpnineaejad
 
 Happy to answer anything. Genuinely curious whether the peek delay works for other people or whether 1.5 seconds is too short.
 ```
@@ -81,7 +81,7 @@ The other thing that mattered was making it universal. Every blocker I tried had
 
 Free on two sites, $4.99 one time for unlimited. No account, no tracking, and it only gets permission for a site when you blur something on it.
 
-[STORE LINK]
+https://chromewebstore.google.com/detail/ldheigmdmfcafdmieipgclpnineaejad
 ```
 
 ---
@@ -144,7 +144,7 @@ No account. No tracking. No server.
 
 5/ Free on two sites. $4.99 one time for unlimited.
 
-[STORE LINK]
+https://chromewebstore.google.com/detail/ldheigmdmfcafdmieipgclpnineaejad
 ```
 
 ## Day 4: LinkedIn (same day, different audience)
@@ -162,7 +162,7 @@ Built with a privacy model I am proud of: it requests no site access at install 
 
 Free on two sites, one-time $4.99 for unlimited.
 
-[STORE LINK]
+https://chromewebstore.google.com/detail/ldheigmdmfcafdmieipgclpnineaejad
 ```
 
 ---
@@ -241,7 +241,7 @@ I read your piece on [specific thing they wrote]. The bit about [detail] matched
 
 I built a small extension called Softspot that takes the opposite approach to blockers: instead of blocking distracting parts of a site, it blurs them, and you can hold a button for a second and a half to peek if you genuinely need to look. The pause turns out to matter more than the barrier.
 
-Free on two sites if you want to try it: [STORE LINK]
+Free on two sites if you want to try it: https://chromewebstore.google.com/detail/ldheigmdmfcafdmieipgclpnineaejad
 
 No ask attached, I just thought it might be relevant to what you write about.
 
