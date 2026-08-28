@@ -20,73 +20,63 @@ on the same day. Never argue with a downvoted comment.
 
 ---
 
-## Day 1: r/ADHD
+## Channel note
 
-**Read the rules first.** r/ADHD restricts self-promotion heavily. Check
-whether there is a weekly "what tools work for you" thread and post there
-instead of as a top-level post. If a mod removes it, do not repost; message
-the mods and ask where it belongs.
-
-**Title:**
-```
-Blockers never worked for my ADHD brain, so I made something that just blurs the distracting stuff instead
-```
-
-**Body:**
-```
-Every website blocker I tried failed the same way. I would hit the block page, feel told off, then spend two minutes disabling it or opening a different browser. The all-or-nothing thing just does not fit how my attention works.
-
-What I actually wanted was for the noise to stop grabbing me, without being locked out of anything.
-
-So I built a small browser extension that blurs it. You press a hotkey, click the thing that keeps pulling your eyes (the YouTube sidebar, the LinkedIn feed, comments, whatever) and it stays blurred on every visit. The page still works. Nothing is deleted or blocked.
-
-The part that surprised me is the peek button. If you want to see a blurred thing, you hover it and hold a button for about a second and a half before it reveals. That pause is stupidly short but it is enough time for the "wait, what did I come here for" thought to arrive. Maybe half the time I let go without looking.
-
-No shame screens, no streaks, no lecture. It just makes the pull quieter.
-
-It is free on two sites. I put it on the Chrome store as a one time $4.99 unlock for unlimited sites because I would rather charge once than run a subscription for something this small. Not tracking anything, no account, and it only gets access to a site when you blur something there.
-
-https://chromewebstore.google.com/detail/ldheigmdmfcafdmieipgclpnineaejad
-
-Happy to answer anything. Genuinely curious whether the peek delay works for other people or whether 1.5 seconds is too short.
-```
-
-**ALTERNATE opening if you do not have ADHD:**
-```
-I kept watching people around me fight with website blockers, and the failure mode was always the same: hit the block page, feel told off, disable it two minutes later.
-
-So I tried building the opposite. Instead of blocking a distraction, it blurs it.
-```
+r/ADHD and r/productivity ban all self-promotion, so they are out for
+posts. The plan below uses only channels where launching your own product
+is explicitly welcome. The one legitimate way back into strict subs is in
+the "Answering questions" section at the bottom: honest, disclosed,
+genuinely helpful comments where someone already asked for exactly this.
 
 ---
 
-## Day 2: r/productivity
+## Day 1: Show HN (moved up, now the lead channel)
 
-**Title:**
-```
-I built a browser extension that blurs distractions instead of blocking them. Three months of using it daily, here is what I learned.
-```
-
-**Body:**
-```
-Short version: blocking creates a fight, blurring creates a pause. The pause wins more often.
-
-I spent years cycling through blockers. The pattern was always the same: install with good intentions, hit a block page during a moment of genuine need, disable it, never re-enable.
-
-The thing I built works differently. You point at anything on any page and it blurs. The page keeps working, the layout does not break, and the content is still there. To see it, you hover and hold a peek button for about 1.5 seconds, then it reveals for 10 seconds and fades back.
-
-What I did not expect: the friction does not need to be large. A second and a half is nothing, but it is long enough for the intention behind the click to become conscious. Often that is all it takes.
-
-The other thing that mattered was making it universal. Every blocker I tried had a hardcoded list of "bad" sites. But my distractions are specific: the related videos sidebar, not YouTube itself. This lets you pick the exact element.
-
-Free on two sites, $4.99 one time for unlimited. No account, no tracking, and it only gets permission for a site when you blur something on it.
-
-https://chromewebstore.google.com/detail/ldheigmdmfcafdmieipgclpnineaejad
-```
+See the Hacker News section below. Post between 8 and 10am US Eastern
+(14:00 to 16:00 in central Europe) on a weekday, then stay available for
+two hours. This is now your strongest channel: an audience that likes
+indie tools, no self-promo taboo, and the privacy-first permission model
+is exactly the kind of detail HN upvotes.
 
 ---
 
-## Day 3: Hacker News (Show HN)
+## Day 2: r/SideProject and r/chrome_extensions
+
+Both subreddits exist for sharing your own work. Post the same day is
+fine since the audiences barely overlap.
+
+**r/SideProject title:**
+```
+I built a Chrome extension that blurs distractions instead of blocking them. Made my first sale this week.
+```
+
+**r/SideProject body:**
+```
+The idea: website blockers are all or nothing, and the block page just
+made me disable them. So I built the opposite. You press Alt+B, click the
+thing that distracts you (a feed, a sidebar, comments) and it blurs. The
+page keeps working. If you really need the content, you hold a peek
+button for 1.5 seconds and it reveals for 10.
+
+Tech: Manifest V3, no host permissions at install (activeTab plus
+per-site grants when you blur something), no analytics, no server.
+Payments via ExtensionPay, one time $4.99 to unlock unlimited sites,
+first two sites free.
+
+https://chromewebstore.google.com/detail/ldheigmdmfcafdmieipgclpnineaejad
+
+Happy to answer anything about the build or the Chrome review process
+(got rejected once for keyword spam in the description, fixed it, second
+review passed).
+```
+
+**r/chrome_extensions:** same body, title:
+```
+Softspot: blur any element on any site, with a hold-to-peek to reveal it
+```
+
+---
+## Hacker News (Show HN) post and first comment
 
 Post between 8 and 10am US Eastern on a weekday. Then stay at your desk
 for two hours to answer comments; HN rewards fast, technical replies.
@@ -119,7 +109,7 @@ Happy to go deeper on any of it.
 
 ---
 
-## Day 4: X / Twitter
+## Day 3: X / Twitter
 
 Post the demo clip with this. Thread, not a single tweet.
 
@@ -147,7 +137,7 @@ No account. No tracking. No server.
 https://chromewebstore.google.com/detail/ldheigmdmfcafdmieipgclpnineaejad
 ```
 
-## Day 4: LinkedIn (same day, different audience)
+## Day 3: LinkedIn (same day, different audience)
 
 ```
 I shipped a small thing.
@@ -164,6 +154,49 @@ Free on two sites, one-time $4.99 for unlimited.
 
 https://chromewebstore.google.com/detail/ldheigmdmfcafdmieipgclpnineaejad
 ```
+
+---
+
+## Day 4: Product Hunt
+
+Launches at 00:01 US Pacific time. Create the listing the evening before.
+
+**Name:** Softspot
+**Tagline:** Blur distractions instead of blocking them
+**Description:**
+```
+Softspot blurs the distracting parts of any website: feeds, sidebars,
+comments, thumbnails. Everything stays where it was, just out of your
+attention's reach. Hold the peek button for 1.5 seconds to reveal
+anything for 10 seconds. That tiny pause is the product: long enough to
+interrupt autopilot, short enough to never feel like punishment. No
+account, no tracking, and no site access until you blur something there.
+Free on 2 sites, $4.99 once for unlimited.
+```
+
+**First comment (as maker):** reuse the Show HN first comment, minus the
+deepest technical parts.
+
+---
+
+## Answering questions (the legitimate way into strict communities)
+
+People constantly ask things like "how do I hide YouTube recommendations"
+or "how do I stop looking at LinkedIn's feed" on Reddit and elsewhere.
+Answering those with a disclosed, helpful comment is not advertising, it
+is answering. Rules for doing it right:
+
+1. Only reply where the question is genuinely what Softspot solves.
+2. Give a full answer first (mention the free options too, like uBlock
+   element hiding or Unhook for YouTube).
+3. Then one line: "I also built an extension for exactly this (I am the
+   dev): it blurs instead of removing, link if useful."
+4. Never do this more than a couple of times a week, never with copy
+   pasted text, and stop in any community where a mod objects.
+
+To find the questions: search Reddit for "hide youtube recommendations",
+"hide linkedin feed", "block twitter trending" sorted by new, and set a
+free F5Bot alert (f5bot.com) for those phrases so they come to your inbox.
 
 ---
 
