@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Softspot: Blur Distractions, Hide Feeds & Focus",
   "short_name": "Softspot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Blur any part of any website: feeds, sidebars, comments. Still there if you need it, but behind a deliberate pause. Gentle focus.",
   "minimum_chrome_version": "116",
   "permissions": ["storage", "activeTab", "scripting"],

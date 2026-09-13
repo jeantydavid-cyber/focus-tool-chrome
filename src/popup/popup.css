@@ -74,6 +74,10 @@ footer {
 main .banner { margin: 10px 0 0; }
 .banner.warn { background: var(--warn-bg); border-color: var(--warn-line); }
 .banner span { flex: 1; }
+.banner.review { flex-direction: column; align-items: stretch; gap: 8px; margin-top: 14px; }
+.banner.review p { margin: 0; font-size: 13px; line-height: 1.45; }
+.review-actions { display: flex; align-items: center; gap: 8px; }
+.review-actions .linkish { margin-left: auto; font-size: 12px; }
 
 .menu {
   position: absolute;

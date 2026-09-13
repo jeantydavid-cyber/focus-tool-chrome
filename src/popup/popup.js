@@ -45,7 +45,60 @@ async function refresh() {
   renderRules();
   await renderPermissionBanner();
   renderPresets();
+  await renderReviewBanner();
 }
+
+// ---------- review nudge ----------
+// Shown once someone has clearly gotten value: 3+ rules and 3+ days of use,
+// or a Pro purchase after 1 day. "Not now" snoozes for two weeks, twice at
+// most; after that, or on "Don't ask again", it never shows again.
+
+const REVIEW_URL = 'https://chromewebstore.google.com/detail/ldheigmdmfcafdmieipgclpnineaejad/reviews';
+const DAY = 24 * 60 * 60 * 1000;
+
+async function getMeta() {
+  const { meta } = await chrome.storage.sync.get('meta');
+  return meta || { installDate: Date.now(), ruleCountEverCreated: 0 };
+}
+
+async function setReviewState(patch) {
+  const meta = await getMeta();
+  meta.review = Object.assign(meta.review || { asks: 0 }, patch);
+  await chrome.storage.sync.set({ meta });
+}
+
+async function renderReviewBanner() {
+  const meta = await getMeta();
+  const review = meta.review || { asks: 0 };
+  const age = Date.now() - (meta.installDate || Date.now());
+  const rules = meta.ruleCountEverCreated || 0;
+
+  let show = false;
+  if (review.state !== 'done' && review.state !== 'never') {
+    const snoozed = review.until && Date.now() < review.until;
+    const earned = (rules >= 3 && age >= 3 * DAY) || (ui.paid && age >= 1 * DAY);
+    show = earned && !snoozed;
+  }
+  $('reviewBanner').classList.toggle('hidden', !show);
+}
+
+$('reviewYesBtn').addEventListener('click', async () => {
+  await setReviewState({ state: 'done' });
+  chrome.tabs.create({ url: REVIEW_URL });
+  window.close();
+});
+
+$('reviewLaterBtn').addEventListener('click', async () => {
+  const meta = await getMeta();
+  const asks = ((meta.review && meta.review.asks) || 0) + 1;
+  await setReviewState(asks >= 2 ? { state: 'never', asks } : { until: Date.now() + 14 * DAY, asks });
+  $('reviewBanner').classList.add('hidden');
+});
+
+$('reviewNeverBtn').addEventListener('click', async () => {
+  await setReviewState({ state: 'never' });
+  $('reviewBanner').classList.add('hidden');
+});
 
 async function refreshGlobal() {
   const res = await send({ type: 'sites:list' });
