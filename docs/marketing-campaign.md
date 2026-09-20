@@ -60,7 +60,7 @@ button for 1.5 seconds and it reveals for 10.
 
 Tech: Manifest V3, no host permissions at install (activeTab plus
 per-site grants when you blur something), no analytics, no server.
-Payments via ExtensionPay, one time $4.99 to unlock unlimited sites,
+Payments via ExtensionPay, one time $9.99 to unlock unlimited sites,
 first two sites free.
 
 https://chromewebstore.google.com/detail/ldheigmdmfcafdmieipgclpnineaejad
@@ -102,7 +102,7 @@ SPAs needed a MutationObserver plus URL-change detection, since YouTube and frie
 
 The peek interaction is the actual product: hold about 1.5s, content reveals for 10s, then re-blurs. Short enough not to feel punitive, long enough to interrupt autopilot.
 
-No analytics, no server, no account. Free on two sites, one-time $4.99 for unlimited, via ExtensionPay.
+No analytics, no server, no account. Free on two sites, one-time $9.99 for unlimited, via ExtensionPay.
 
 Happy to go deeper on any of it.
 ```
@@ -132,7 +132,7 @@ That tiny pause is the whole product. Long enough to interrupt autopilot, short 
 
 No account. No tracking. No server.
 
-5/ Free on two sites. $4.99 one time for unlimited.
+5/ Free on two sites. $9.99 one time for unlimited.
 
 https://chromewebstore.google.com/detail/ldheigmdmfcafdmieipgclpnineaejad
 ```
@@ -150,7 +150,7 @@ That pause is the entire product. It is short enough not to feel like punishment
 
 Built with a privacy model I am proud of: it requests no site access at install and only gets permission for a site when you choose to blur something there. No account, no tracking.
 
-Free on two sites, one-time $4.99 for unlimited.
+Free on two sites, one-time $9.99 for unlimited.
 
 https://chromewebstore.google.com/detail/ldheigmdmfcafdmieipgclpnineaejad
 ```
@@ -171,7 +171,7 @@ attention's reach. Hold the peek button for 1.5 seconds to reveal
 anything for 10 seconds. That tiny pause is the product: long enough to
 interrupt autopilot, short enough to never feel like punishment. No
 account, no tracking, and no site access until you blur something there.
-Free on 2 sites, $4.99 once for unlimited.
+Free on 2 sites, $9.99 once for unlimited.
 ```
 
 **First comment (as maker):** reuse the Show HN first comment, minus the
@@ -217,7 +217,7 @@ Fair, and for some people that genuinely works. For me the problem was never a d
 
 **"Why is it paid?"**
 ```
-Free on two sites, which covers most people. The $4.99 is one time, not a subscription, because a tool this small should not be a recurring bill. It pays for the ongoing work of fixing selectors when sites redesign, which happens constantly.
+Free on two sites, which covers most people. The $9.99 is one time, not a subscription, because a tool this small should not be a recurring bill. It pays for the ongoing work of fixing selectors when sites redesign, which happens constantly.
 ```
 
 **"Can I see the code / is it open source?"**

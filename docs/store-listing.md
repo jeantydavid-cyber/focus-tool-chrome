@@ -42,7 +42,7 @@ Made with ADHD in mind, without shame or lockouts. Nothing is forbidden, nothing
 
 FREE AND PRO
 Free: unlimited blurs on up to 2 sites.
-Pro ($4.99, one time): every site, adjustable peek timing, rule backup. Yours forever. No subscription.
+Pro ($9.99, one time): every site, adjustable peek timing, rule backup. Yours forever. No subscription.
 
 WHY BLUR INSTEAD OF BLOCK?
 Blocking breaks pages and invites workarounds; you just open another browser. A blur keeps the page intact and working. It removes the pull of the content without pretending it doesn't exist. Softer, and for many of us, far more effective.
@@ -116,7 +116,7 @@ Softspot wordmark + the three-bars logo on the purple gradient, tagline:
 
 ## Publishing checklist
 
-- [ ] ExtensionPay: price set to 4.99 USD one-time, test plan removed
+- [ ] ExtensionPay: price set to 9.99 USD one-time, test plan removed
 - [ ] ExtensionPay: Stripe connected (live charges enabled)
 - [ ] Fresh test: reset to unpaid, full free-tier walkthrough, test purchase
 - [ ] `cd src && zip -r ../softspot.zip .` (manifest.json at zip root)

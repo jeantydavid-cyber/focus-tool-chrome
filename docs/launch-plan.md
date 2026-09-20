@@ -9,13 +9,13 @@ whether to move on.
 
 - Extension built, tested (24 automated checks), renamed to Softspot
 - ExtensionPay registered (id blur-distractions), Stripe connected
-- Test purchase verified end to end at $4.99
+- Test purchase verified end to end at $9.99
 - Website live on Netlify with privacy policy
 - Store listing copy, privacy answers, and zip ready
 
 ## Phase 1: pre-submission (one evening)
 
-1. Set the ExtensionPay plan to 4.99 USD one-time; delete any test-priced plan.
+1. Set the ExtensionPay plan to 9.99 USD one-time; delete any test-priced plan.
 2. In Stripe settings, confirm: public business name "Softspot", statement
    descriptor SOFTSPOT, support email getsoftspot@gmail.com.
 3. Take the 4 remaining screenshots at 1280x800 (see store-listing.md):
@@ -23,7 +23,7 @@ whether to move on.
    The settings screenshot is already generated.
 4. Optional: 440x280 promo tile (logo + "Put the noise out of focus.").
 
-**Done when:** 5 screenshots exist and checkout shows $4.99.
+**Done when:** 5 screenshots exist and checkout shows $9.99.
 
 ## Phase 2: submission (about 1 hour)
 
@@ -47,7 +47,7 @@ If rejected: read the email, fix the one thing named, resubmit. No penalty.
 1. Install Softspot from the store link in your own Chrome. Remove the
    unpacked dev copy first (or use a separate profile) so ExtensionPay
    leaves test mode cleanly.
-2. Make ONE real purchase at $4.99 with a real card. Verify Pro unlocks.
+2. Make ONE real purchase at $9.99 with a real card. Verify Pro unlocks.
    This is the live-payment test; the money comes back as your own payout.
 3. Update the site: point the "Add Softspot to Chrome" button at the store
    URL, redeploy to Netlify. (Send the URL to Claude and it is a 2-minute
@@ -101,7 +101,7 @@ and you can respond to comments.
 
 - **Week 4:** 200+ installs, 5+ reviews. Below that: marketing problem,
   not product problem; do another round of posts before touching code.
-- **Month 3:** ~1,000 users at 2 to 4% conversion on $4.99 is roughly
+- **Month 3:** ~1,000 users at 2 to 4% conversion on $9.99 is roughly
   $100 to $200 cumulative; the price point needs volume, so the real
   question is growth slope, not revenue yet.
 - **Kill criterion:** under 300 installs and under 2% of users ever
@@ -127,4 +127,4 @@ with "fixed in version x.y, refresh the site."
 **Someone asks for a refund despite the policy.**
 Refunding via the Stripe dashboard takes ten seconds and costs less than
 a chargeback ($15 fee) or a one-star review. All-sales-final is the
-public stance, not a hill to die on for $4.99.
+public stance, not a hill to die on for $9.99.
