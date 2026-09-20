@@ -132,12 +132,18 @@ async function registerSiteScript(host) {
     matches: originPatterns(host),
     js: ['content/blur.js'],
     css: ['content/blur.css'],
-    runAt: 'document_idle',
+    // document_start lets blur.js pre-blur matched elements before first
+    // paint, so the feed never flashes on load.
+    runAt: 'document_start',
     persistAcrossSessions: true
   };
   try {
     const existing = await chrome.scripting.getRegisteredContentScripts({ ids: [id] });
-    if (existing.length) return;
+    if (existing.length) {
+      // Registrations persist across updates; migrate older document_idle ones.
+      if (existing[0].runAt !== 'document_start') await chrome.scripting.updateContentScripts([script]);
+      return;
+    }
     await chrome.scripting.registerContentScripts([script]);
   } catch (e) {
     console.warn('registerSiteScript failed for', host, e);
@@ -201,7 +207,7 @@ async function notifyAllSites() {
 
 // ---------- picker injection ----------
 
-async function startPicker(tab) {
+async function startPicker(tab, opts = {}) {
   if (!tab || !tab.id || !/^https?:/.test(tab.url || '')) return;
   try {
     await chrome.scripting.insertCSS({ target: { tabId: tab.id }, files: ['content/blur.css'] });
@@ -209,7 +215,7 @@ async function startPicker(tab) {
       target: { tabId: tab.id },
       files: ['lib/selector.js', 'content/blur.js', 'content/picker.js']
     });
-    await chrome.tabs.sendMessage(tab.id, { type: 'picker:toggle' });
+    await chrome.tabs.sendMessage(tab.id, { type: 'picker:toggle', replaceRuleId: opts.replaceRuleId || null });
   } catch (e) {
     console.warn('Picker injection failed:', e.message);
   }
@@ -227,6 +233,17 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'install') {
     await bumpMeta({ installDate: Date.now(), ruleCountEverCreated: 0 });
     chrome.tabs.create({ url: chrome.runtime.getURL('onboarding/onboarding.html') });
+  }
+  if (details.reason === 'update') {
+    // A quiet "what's new": badge on the icon, card in the popup. No new tabs.
+    const version = chrome.runtime.getManifest().version;
+    if (details.previousVersion !== version) {
+      await chrome.storage.local.set({ whatsNew: { version, seen: false } });
+      try {
+        await chrome.action.setBadgeBackgroundColor({ color: '#7c5cff' });
+        await chrome.action.setBadgeText({ text: 'NEW' });
+      } catch { /* badge is cosmetic */ }
+    }
   }
   await reconcileRegistrations();
 });
@@ -264,6 +281,28 @@ async function createRules(host, rules) {
   return { ok: true, locked, needsPermission };
 }
 
+// Re-pick for a stale rule: new selectors, same identity (id, label, source),
+// so presets keep showing as added and the popup list stays stable.
+async function replaceRule(host, ruleId, rule) {
+  const site = await getSite(host);
+  if (!site) return { ok: false, reason: 'no-site' };
+  const idx = site.rules.findIndex((r) => r.id === ruleId);
+  if (idx === -1) return { ok: false, reason: 'no-rule' };
+  const old = site.rules[idx];
+  site.rules[idx] = {
+    ...old,
+    selector: rule.selector,
+    generalized: rule.generalized || null,
+    mode: 'specific',
+    label: old.label || rule.label,
+    staleCount: 0,
+    updatedAt: Date.now()
+  };
+  await setSite(host, site);
+  await notifyHostTabs(host);
+  return { ok: true, site };
+}
+
 // ---------- message router ----------
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
@@ -273,7 +312,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         let tab = sender.tab;
         if (!tab && msg.tabId) tab = await chrome.tabs.get(msg.tabId);
         if (!tab) [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        await startPicker(tab);
+        await startPicker(tab, { replaceRuleId: msg.replaceRuleId });
         return { ok: true };
       }
 
@@ -311,6 +350,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         await notifyHostTabs(msg.host);
         return { ok: true, site };
       }
+
+      case 'rule:replace':
+        return await replaceRule(msg.host, msg.ruleId, msg.rule);
 
       case 'rule:delete': {
         const site = await getSite(msg.host);

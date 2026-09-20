@@ -148,6 +148,16 @@
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.16);
 }
+.bd-picker-hint b {
+  font-weight: 700;
+  color: #cfc3ff;
+  max-width: 220px;
+  display: inline-block;
+  vertical-align: bottom;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 /* ---------- Paywall modal ---------- */
 

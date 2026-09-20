@@ -19,8 +19,13 @@
     hint: null,
     hovered: null,
     toastTimer: null,
-    lastRule: null
+    lastRule: null,
+    replaceRuleId: null, // set when re-picking a stale rule from the popup
+    lastMouse: null,
+    lockPos: null,       // mouse position when arrows adjusted the selection
+    childStack: []       // path back down after ArrowUp
   };
+  const LOCK_RADIUS_PX = 24; // mouse jitter that does not cancel an arrow-key selection
 
   function ensureRoot() {
     if (picker.root && picker.root.isConnected) return picker.root;
@@ -48,8 +53,8 @@
 
     picker.hint = document.createElement('div');
     picker.hint.className = 'bd-picker-hint';
-    picker.hint.innerHTML = 'Click an element to blur it · <kbd>Esc</kbd> to cancel';
     root.appendChild(picker.hint);
+    renderHint(null);
 
     if (window.__bd) window.__bd.setPicking(true); // let clicks pass through blur overlays
 
@@ -68,6 +73,8 @@
     for (const el of [picker.highlight, picker.hint]) el && el.remove();
     picker.highlight = picker.hint = null;
     picker.hovered = null;
+    picker.lockPos = null;
+    picker.childStack = [];
     if (window.__bd) window.__bd.setPicking(false);
     window.removeEventListener('mousemove', onMove, true);
     window.removeEventListener('click', onClick, true);
@@ -91,23 +98,56 @@
       e.preventDefault();
       e.stopPropagation();
       deactivate();
-    }
-  }
-
-  function isOurNode(el) {
-    return el && el.closest && (el.closest('#bd-picker-root') || el.closest('#bd-root') || el.closest('.bd-toast'));
-  }
-
-  function onMove(e) {
-    const el = document.elementFromPoint(e.clientX, e.clientY);
-    if (!el || isOurNode(el) || el === document.documentElement || el === document.body) {
-      picker.hovered = null;
-      if (picker.highlight) picker.highlight.style.display = 'none';
       return;
     }
-    if (el === picker.hovered) return;
-    picker.hovered = el;
+    if (!picker.hovered) return;
+    // Arrow keys walk the tree: up widens to the parent, down returns to the
+    // child you came from. The selection then holds until the mouse really moves.
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      e.stopPropagation();
+      const p = picker.hovered.parentElement;
+      if (p && p !== document.body && p !== document.documentElement && !isOurNode(p)) {
+        picker.childStack.push(picker.hovered);
+        picker.lockPos = picker.lastMouse;
+        setHovered(p);
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      e.stopPropagation();
+      const c = picker.childStack.pop();
+      if (c && c.isConnected) {
+        picker.lockPos = picker.lastMouse;
+        setHovered(c);
+      }
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      e.stopPropagation();
+      selectElement(picker.hovered);
+    }
+  }
 
+  function renderHint(el) {
+    if (!picker.hint) return;
+    if (picker.replaceRuleId && !el) {
+      picker.hint.innerHTML = 'Click the element again to fix this rule · <kbd>Esc</kbd> to cancel';
+      return;
+    }
+    if (!el) {
+      picker.hint.innerHTML = 'Click an element to blur it · <kbd>↑</kbd> <kbd>↓</kbd> bigger or smaller · <kbd>Esc</kbd> to cancel';
+      return;
+    }
+    picker.hint.innerHTML = '<b></b> · <kbd>↑</kbd> bigger <kbd>↓</kbd> smaller · click to blur';
+    picker.hint.querySelector('b').textContent = S.makeLabel(el);
+  }
+
+  function setHovered(el) {
+    picker.hovered = el;
+    if (!el) {
+      if (picker.highlight) picker.highlight.style.display = 'none';
+      renderHint(null);
+      return;
+    }
     const r = el.getBoundingClientRect();
     Object.assign(picker.highlight.style, {
       display: 'block',
@@ -116,14 +156,33 @@
       width: r.width + 'px',
       height: r.height + 'px'
     });
+    renderHint(el);
   }
 
-  function tooBig(el) {
-    if (el === document.body || el === document.documentElement) return true;
+  function isOurNode(el) {
+    return el && el.closest && (el.closest('#bd-picker-root') || el.closest('#bd-root') || el.closest('.bd-toast'));
+  }
+
+  function onMove(e) {
+    picker.lastMouse = { x: e.clientX, y: e.clientY };
+    if (picker.lockPos) {
+      if (Math.hypot(e.clientX - picker.lockPos.x, e.clientY - picker.lockPos.y) < LOCK_RADIUS_PX) return;
+      picker.lockPos = null;
+      picker.childStack = [];
+    }
+    const el = document.elementFromPoint(e.clientX, e.clientY);
+    if (!el || isOurNode(el) || el === document.documentElement || el === document.body) {
+      setHovered(null);
+      return;
+    }
+    if (el === picker.hovered) return;
+    setHovered(el);
+  }
+
+  function viewportCoverage(el) {
     const r = el.getBoundingClientRect();
-    const cover = (Math.min(r.width, window.innerWidth) * Math.min(r.height, window.innerHeight)) /
+    return (Math.min(r.width, window.innerWidth) * Math.min(r.height, window.innerHeight)) /
       (window.innerWidth * window.innerHeight);
-    return cover > VIEWPORT_FAILSAFE;
   }
 
   function onClick(e) {
@@ -132,13 +191,29 @@
     e.stopPropagation();
     const el = picker.hovered || document.elementFromPoint(e.clientX, e.clientY);
     if (!el || isOurNode(el)) return;
+    selectElement(el);
+  }
 
-    // Failsafe (spec §3)
-    if (tooBig(el)) {
+  function selectElement(el) {
+    // Failsafe (spec §3): the page itself is never blurrable. Anything else
+    // that covers most of the viewport gets a confirmation instead of a
+    // refusal, since on small screens a feed legitimately fills the window.
+    if (el === document.body || el === document.documentElement) {
       toast('That would blur the whole page. Pick something smaller.', []);
       return;
     }
+    if (viewportCoverage(el) > VIEWPORT_FAILSAFE) {
+      deactivate();
+      toast('That covers most of the page. Blur it anyway?', [
+        { text: 'Cancel', secondary: true, onClick: () => {} },
+        { text: 'Blur anyway', onClick: () => createRuleFor(el) }
+      ], 12000);
+      return;
+    }
+    createRuleFor(el);
+  }
 
+  function createRuleFor(el) {
     const selector = S.getSpecific(el);
     if (!selector) {
       toast("Couldn't build a stable selector for that element.", []);
@@ -158,6 +233,21 @@
     };
     picker.lastRule = rule;
     deactivate();
+
+    if (picker.replaceRuleId) {
+      // Fixing a stale rule: swap its selectors in place, keep its identity.
+      const ruleId = picker.replaceRuleId;
+      picker.replaceRuleId = null;
+      chrome.runtime.sendMessage({ type: 'rule:replace', host: location.hostname, ruleId, rule }, (res) => {
+        if (chrome.runtime.lastError || !res || !res.ok) {
+          toast('Something went wrong updating that rule.', []);
+          return;
+        }
+        if (window.__bd) window.__bd.refresh();
+        toast('Rule fixed. Blurring again on every visit.', [], 5000);
+      });
+      return;
+    }
 
     chrome.runtime.sendMessage({ type: 'rule:create', host: location.hostname, rule }, (res) => {
       if (chrome.runtime.lastError || !res) {
@@ -308,7 +398,12 @@
 
   chrome.runtime.onMessage.addListener((msg) => {
     if (msg && msg.type === 'picker:toggle') {
-      picker.active ? deactivate() : activate();
+      if (picker.active) {
+        deactivate();
+      } else {
+        picker.replaceRuleId = msg.replaceRuleId || null;
+        activate();
+      }
     }
   });
 

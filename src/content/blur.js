@@ -24,8 +24,66 @@
     root: null,
     staleReported: false,
     lastUrl: location.href,
-    applyQueued: false
+    applyQueued: false,
+    earlyStyle: null,
+    earlyTimer: null
   };
+
+  // ---------- early blur: paint blurred from the first frame ----------
+  // The registered script runs at document_start. Rules are read straight
+  // from storage (no worker round-trip) and emitted as a <style> so matched
+  // elements never flash unblurred. The sheet excludes elements the class
+  // pass has taken over, so peek keeps working while both coexist. It is
+  // dropped once every rule has matched, on any rules change, or after 10s.
+  const FREE_SITE_LIMIT = 2; // keep in sync with background.js
+  const EARLY_STYLE_TTL_MS = 10000;
+
+  function earlyLocked(all, paid) {
+    if (paid) return false;
+    const active = Object.entries(all)
+      .filter(([k, v]) => k.startsWith('site:') && v && v.rules && v.rules.some((r) => r.enabled))
+      .map(([, v]) => v)
+      .sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0))
+      .map((s) => s.host);
+    const idx = active.indexOf(HOST);
+    return idx === -1 ? active.length >= FREE_SITE_LIMIT : idx >= FREE_SITE_LIMIT;
+  }
+
+  async function injectEarlyStyle() {
+    if (document.readyState !== 'loading') return; // page already painted: nothing to pre-empt
+    try {
+      const all = await chrome.storage.sync.get(null);
+      const { paidCache } = await chrome.storage.local.get('paidCache');
+      const site = all['site:' + HOST];
+      const settings = { blurPx: 12, paused: false, pausedUntil: null, ...(all.settings || {}) };
+      const paused = settings.paused && !(settings.pausedUntil && Date.now() >= settings.pausedUntil);
+      if (!site || !site.enabled || paused || earlyLocked(all, !!paidCache)) return;
+      if (state.earlyStyle) return;
+
+      const px = settings.blurPx || 12;
+      const css = site.rules
+        .filter((r) => r.enabled)
+        .map((r) => (r.mode === 'generalized' && r.generalized) ? r.generalized : r.selector)
+        .filter((sel) => sel && !/^(html|body)$/i.test(sel.trim()))
+        .map((sel) => `:is(${sel}):not(.bd-blurred):not(.bd-peek *){filter:blur(${px}px) grayscale(40%)!important}`)
+        .join('\n');
+      if (!css) return;
+
+      const style = document.createElement('style');
+      style.id = 'bd-early';
+      style.textContent = css;
+      document.documentElement.appendChild(style);
+      state.earlyStyle = style;
+      state.earlyTimer = setTimeout(dropEarlyStyle, EARLY_STYLE_TTL_MS);
+    } catch {
+      /* storage unavailable: the regular apply pass still blurs everything */
+    }
+  }
+
+  function dropEarlyStyle() {
+    if (state.earlyStyle) { state.earlyStyle.remove(); state.earlyStyle = null; }
+    if (state.earlyTimer) { clearTimeout(state.earlyTimer); state.earlyTimer = null; }
+  }
 
   // ---------- data ----------
 
@@ -97,6 +155,13 @@
       if (!state.blurred.has(el)) blurElement(el);
     }
     repositionOverlays();
+
+    // Hand over fully to the class pass once the page is loaded and every
+    // rule has found its element (SPAs render late, so this can take a bit).
+    if (state.earlyStyle && document.readyState === 'complete') {
+      const rules = activeRules();
+      if (rules.every((r) => state.lastMatchCounts[r.id] > 0)) dropEarlyStyle();
+    }
   }
 
   function blurElement(el) {
@@ -270,6 +335,7 @@
       if (e.target !== document) repositionOverlays();
     }, { passive: true, capture: true });
     window.addEventListener('popstate', scheduleApply);
+    window.addEventListener('load', scheduleApply, { once: true }); // lets the early sheet hand over
     if (window.navigation && window.navigation.addEventListener) {
       window.navigation.addEventListener('navigatesuccess', scheduleApply);
     }
@@ -303,6 +369,7 @@
 
   chrome.runtime.onMessage.addListener((msg) => {
     if (msg && (msg.type === 'rules:changed' || msg.type === 'settings:changed')) {
+      dropEarlyStyle(); // rules may have been paused, disabled, or edited
       fetchAndApply();
     }
   });
@@ -318,6 +385,7 @@
     startObserving();
     fetchAndApply();
   }
+  injectEarlyStyle(); // no-op unless we are running before the page has painted
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot, { once: true });
   } else {

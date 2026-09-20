@@ -16,7 +16,41 @@ const ui = {
   settings: null
 };
 
+// ---------- what's new (shown once after an update) ----------
+
+const WHATS_NEW = {
+  '1.1.0': [
+    'Blur now applies before the page paints. No more flash of the feed on load.',
+    'Picker: press ↑ or ↓ to blur a bigger or smaller area before you click.',
+    'Rules that stopped matching after a site redesign now have a Fix button.'
+  ]
+};
+
+async function renderWhatsNew() {
+  const { whatsNew } = await chrome.storage.local.get('whatsNew');
+  const notes = whatsNew && !whatsNew.seen && WHATS_NEW[whatsNew.version];
+  try { await chrome.action.setBadgeText({ text: '' }); } catch { /* cosmetic */ }
+  if (!notes) {
+    if (whatsNew && !whatsNew.seen) await chrome.storage.local.set({ whatsNew: { ...whatsNew, seen: true } });
+    return;
+  }
+  $('whatsNewTitle').textContent = `What's new in ${whatsNew.version}`;
+  const ul = $('whatsNewList');
+  ul.innerHTML = '';
+  for (const line of notes) {
+    const li = document.createElement('li');
+    li.textContent = line;
+    ul.appendChild(li);
+  }
+  $('whatsNew').classList.remove('hidden');
+  $('whatsNewOk').addEventListener('click', async () => {
+    await chrome.storage.local.set({ whatsNew: { ...whatsNew, seen: true } });
+    $('whatsNew').classList.add('hidden');
+  }, { once: true });
+}
+
 async function init() {
+  renderWhatsNew();
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   ui.tab = tab;
   try {
@@ -184,7 +218,15 @@ function renderRules() {
       stale.className = 'stale';
       stale.textContent = '⚠️';
       stale.title = "This rule hasn't matched anything on the last few page loads. The site may have changed.";
-      li.appendChild(stale);
+      const fix = document.createElement('button');
+      fix.className = 'chip small';
+      fix.textContent = 'Fix';
+      fix.title = 'Pick the element again to repair this rule';
+      fix.addEventListener('click', async () => {
+        await send({ type: 'picker:start', tabId: ui.tab.id, replaceRuleId: rule.id });
+        window.close();
+      });
+      li.append(stale, fix);
     }
     li.append(edit, del);
     list.appendChild(li);
