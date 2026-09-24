@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://getsoftspot.netlify.app/sitemap.xml
