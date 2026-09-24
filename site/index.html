@@ -80,6 +80,11 @@
     summary { font-weight: 700; cursor: pointer; }
     details p { color: var(--muted); margin: 10px 0 2px; }
 
+    ul.guides { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    ul.guides li { border: 1px solid var(--line); border-radius: 12px; background: var(--card); padding: 12px 16px; }
+    ul.guides a { text-decoration: none; font-weight: 600; }
+    ul.guides a:hover { text-decoration: underline; }
+
     footer.site { border-top: 1px solid var(--line); margin-top: 56px; padding: 28px 0 40px; color: var(--muted); font-size: 14px; }
     footer.site .wrap { display: flex; flex-wrap: wrap; gap: 10px 26px; align-items: center; justify-content: space-between; }
     footer.site a { color: var(--muted); }
@@ -100,7 +105,7 @@
       <nav>
         <a href="#how">How it works</a>
         <a href="#pricing">Pricing</a>
-        <a href="#faq">FAQ</a>
+        <a href="#guides">Guides</a>
         <a href="privacy.html">Privacy</a>
       </nav>
     </header>
@@ -184,6 +189,18 @@
         <summary>Which browsers are supported?</summary>
         <p>Google Chrome and Microsoft Edge, and Chromium-based browsers that support Manifest V3 extensions.</p>
       </details>
+    </section>
+
+    <section id="guides">
+      <h2>Guides</h2>
+      <ul class="guides">
+        <li><a href="hide-youtube-shorts.html">How to hide YouTube Shorts (3 ways that actually work)</a></li>
+        <li><a href="hide-youtube-recommendations.html">How to hide YouTube recommendations on the homepage and sidebar</a></li>
+        <li><a href="hide-linkedin-feed.html">How to hide the LinkedIn feed and keep messages and jobs working</a></li>
+        <li><a href="hide-twitter-trending.html">How to hide trending topics and the For You feed on X (Twitter)</a></li>
+        <li><a href="hide-facebook-feed.html">How to hide the Facebook news feed without deleting your account</a></li>
+        <li><a href="hide-reddit-feed.html">How to hide the Reddit home feed and still use the subreddits you like</a></li>
+      </ul>
     </section>
 
     <footer class="site">

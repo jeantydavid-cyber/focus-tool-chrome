@@ -1,0 +1,56 @@
+/* Shared styles for Softspot guide pages. Mirrors the homepage tokens. */
+:root {
+  color-scheme: light dark;
+  --accent: #7c5cff;
+  --accent-2: #6e4fe8;
+  --bg: #ffffff; --fg: #1c1a26; --muted: #6f6b80; --line: #e7e4f2; --card: #f6f5fb;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #12101a; --fg: #eceaf6; --muted: #9a95ad; --line: #2c2938; --card: #1c1926; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.7 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--fg); }
+a { color: var(--accent); }
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 22px; }
+
+header.site { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 19px; color: var(--fg); text-decoration: none; }
+.brand svg { display: block; }
+nav a { margin-left: 18px; text-decoration: none; color: var(--muted); font-weight: 600; font-size: 14.5px; }
+nav a:hover { color: var(--fg); }
+
+article { padding: 26px 0 10px; }
+article h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 14px; }
+article .lede { font-size: 18px; color: var(--muted); margin: 0 0 28px; }
+article h2 { font-size: 22px; margin: 34px 0 10px; letter-spacing: -0.01em; }
+article h3 { font-size: 17px; margin: 22px 0 6px; }
+article p { margin: 0 0 14px; }
+article ul, article ol { padding-left: 22px; margin: 0 0 14px; }
+article li { margin-bottom: 6px; }
+.pill { display: inline-block; font-size: 12.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); color: var(--muted); margin-left: 8px; vertical-align: middle; }
+.pill.good { color: #1f7a4d; border-color: #bfe6cf; background: #eaf8ef; }
+@media (prefers-color-scheme: dark) { .pill.good { color: #7fdca6; border-color: #24513a; background: #12291d; } }
+
+.verdict { display: grid; gap: 10px; margin: 14px 0 6px; }
+.verdict div { border: 1px solid var(--line); border-radius: 12px; background: var(--card); padding: 12px 16px; }
+.verdict b { display: block; margin-bottom: 2px; }
+
+.cta-box { border: 1px solid var(--accent); box-shadow: 0 0 0 1px var(--accent); border-radius: 16px; background: var(--card); padding: 24px; margin: 30px 0 10px; text-align: center; }
+.cta-box h2 { margin: 0 0 8px; font-size: 20px; }
+.cta-box p { color: var(--muted); margin: 0 0 16px; }
+.cta { display: inline-block; padding: 13px 24px; border-radius: 12px; text-decoration: none; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; font-weight: 700; box-shadow: 0 8px 24px rgba(124, 92, 255, 0.35); }
+.cta:hover { filter: brightness(1.08); }
+.cta-note { display: block; margin-top: 10px; color: var(--muted); font-size: 13px; }
+
+.steps { list-style: none; padding: 0; margin: 12px 0 16px; display: grid; gap: 10px; }
+.steps li { display: flex; gap: 12px; align-items: flex-start; border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; background: var(--card); }
+.num { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; margin-top: 3px; }
+kbd { padding: 2px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); font: 700 14px/1.4 ui-monospace, monospace; }
+
+.more { border-top: 1px solid var(--line); margin-top: 36px; padding-top: 22px; }
+.more h2 { font-size: 16px; margin: 0 0 10px; color: var(--muted); }
+.more ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+
+footer.site { border-top: 1px solid var(--line); margin-top: 40px; padding: 26px 0 40px; color: var(--muted); font-size: 14px; }
+footer.site .wrap { display: flex; flex-wrap: wrap; gap: 10px 26px; align-items: center; justify-content: space-between; }
+footer.site a { color: var(--muted); }
